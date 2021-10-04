@@ -117,13 +117,13 @@ public class SimpleDisplacementRule<T extends Moveable> implements DisplacementR
                 Moveable atPosition = position.get(newLocation);
                 if(atPosition!=null) {
                     if(atPosition.getColor()!=color) {
-                        T result = moveHandler.apply(new Move(mainDisplacement, atPosition));
+                        T result = moveHandler.apply(new Move(position, mainDisplacement, atPosition));
                         if(result!=null) { return result; }
                     }
                     break;
                 }
 
-                T result = moveHandler.apply(new Move(mainDisplacement));
+                T result = moveHandler.apply(new Move(position, mainDisplacement));
                 if(result!=null) { return result; }
 
                 newLocation = newLocation.to(lookup.rowIncrement, lookup.columnIncrement);

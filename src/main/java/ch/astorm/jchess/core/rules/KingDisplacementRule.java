@@ -68,7 +68,8 @@ public class KingDisplacementRule extends SimpleDisplacementRule<King> {
         }
 
         Coordinate newKingLocation = new Coordinate(kingRow, kingColumn+(2*direction));
-        return new Move(new Displacement(king, location, newKingLocation),
+        return new Move(position,
+                        new Displacement(king, location, newKingLocation),
                         Arrays.asList(new Displacement(rook, rookLocation, new Coordinate(kingRow, newKingLocation.getColumn()-(1*direction)))));
     }
 }
