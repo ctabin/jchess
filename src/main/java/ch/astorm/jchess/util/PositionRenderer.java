@@ -23,7 +23,7 @@ public class PositionRenderer {
      * Mapping of each {@link Moveable} subclass to a single char for printing.
      */
     public static final Map<Class<? extends Moveable>, Function<Color, String>> MOVEABLE_RENDER = new HashMap<>(){{
-        put(Pawn.class, c -> c==Color.WHITE ? "^" : ".");
+        put(Pawn.class, c -> c==Color.WHITE ? "î" : "!");
         put(Rook.class, c -> c==Color.WHITE ? "R" : "r");
         put(Bishop.class, c -> c==Color.WHITE ? "B" : "b");
         put(Knight.class, c -> c==Color.WHITE ? "N" : "n");
@@ -49,10 +49,10 @@ public class PositionRenderer {
      * Renders the given {@code position} in a String.
      * Here is a result example:
      * <pre>
-     *    |---|---|---|---|---|---|---|---|
+     *        |---|---|---|---|---|---|---|---|
      *      8 | r | n | b | q | k | b | n | r |
      *        |---|---|---|---|---|---|---|---|
-     *      7 | . | . | . | . | . | . | . | . |
+     *      7 | ! | ! | ! | ! | ! | ! | ! | ! |
      *        |---|---|---|---|---|---|---|---|
      *      6 |   |   |   |   |   |   |   |   |
      *        |---|---|---|---|---|---|---|---|
@@ -62,7 +62,7 @@ public class PositionRenderer {
      *        |---|---|---|---|---|---|---|---|
      *      3 |   |   |   |   |   |   |   |   |
      *        |---|---|---|---|---|---|---|---|
-     *      2 | ^ | ^ | ^ | ^ | ^ | ^ | ^ | ^ |
+     *      2 | î | î | î | î | î | î | î | î |
      *        |---|---|---|---|---|---|---|---|
      *      1 | R | N | B | Q | K | B | N | R |
      *        |---|---|---|---|---|---|---|---|
