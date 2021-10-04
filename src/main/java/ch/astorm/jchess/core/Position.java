@@ -194,6 +194,23 @@ public class Position {
     }
 
     /**
+     * Returns true if the {@code location} can be reached by the specified {@code moveable}.
+     *
+     * @param location The location.
+     * @param moveable The {@link Moveable} entity.
+     * @return True if {@code moveable} can move to {@code location} from its current location.
+     */
+    public boolean canBeReachedBy(Coordinate location, Moveable moveable) {
+        Coordinate currentLocation = getLocation(moveable);
+        return canBeReachedBy(location, currentLocation, moveable);
+    }
+
+    private boolean canBeReachedBy(Coordinate location, Coordinate currentLocation, Moveable moveable) {
+        DisplacementRule<Moveable> rule = ruleManager.getDisplacementRule(moveable);
+        return rule.canAccess(this, currentLocation, moveable, location);
+    }
+
+    /**
      * Returns all the {@link Moveable} entities in the position.
      */
     public Map<Coordinate, Moveable> getMoveables() {
@@ -350,7 +367,9 @@ public class Position {
         for(Entry<Coordinate, Moveable> entry : moveables.entrySet()) {
             Moveable moveable = entry.getValue();
             Moveable omoveable = other.get(entry.getKey());
-            if(omoveable==null || !moveable.equals(omoveable)) {
+            if(omoveable==null ||
+               !moveable.getClass().equals(omoveable.getClass()) ||
+               moveable.getColor()!=omoveable.getColor()) {
                 return false;
             }
         }

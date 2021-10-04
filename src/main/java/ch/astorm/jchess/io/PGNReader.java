@@ -77,7 +77,8 @@ public class PGNReader extends BufferedReader {
         if(moves.endsWith("1-0")) { game.resign(Color.BLACK); }
         else if(moves.endsWith("0-1")) { game.resign(Color.WHITE); }
         else if(moves.endsWith("1/2-1/2")) { game.draw(); }
-        else { throw new IllegalStateException("The game has no result"); }
+        else if(moves.endsWith("*")) { /* unknown */ }
+        else { throw new IllegalStateException("Unknown end game status"); }
 
         return game;
     }
