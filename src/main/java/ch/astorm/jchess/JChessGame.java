@@ -73,6 +73,11 @@ public class JChessGame {
          * Returns true if the game is allowed to play.
          */
         public boolean isPlayAllowed() { return allowPlay; }
+
+        /**
+         * Returns true if the game is finished.
+         */
+        public boolean isFinished() { return this!=NOT_FINISHED; }
     }
 
     /**

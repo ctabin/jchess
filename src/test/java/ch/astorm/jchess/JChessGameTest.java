@@ -16,7 +16,9 @@ import ch.astorm.jchess.io.MoveParser;
 import ch.astorm.jchess.util.PositionRenderer;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 public class JChessGameTest {
@@ -38,11 +40,13 @@ public class JChessGameTest {
         JChessGame game = JChessGame.newEmptyGame(Color.WHITE);
         game.getPosition().put(0, 0, new King(Color.WHITE));
         game.getPosition().put(7, 7, new King(Color.BLACK));
+        assertFalse(game.getStatus().isFinished());
 
         assertEquals(false, game.back());
 
         MoveParser parser = new MoveParser(game);
         assertEquals(JChessGame.Status.DRAW, parser.doMove("Ka2"));
+        assertTrue(game.getStatus().isFinished());
     }
 
     @Test
