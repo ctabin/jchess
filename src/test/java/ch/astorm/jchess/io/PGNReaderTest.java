@@ -3,7 +3,7 @@ package ch.astorm.jchess.io;
 
 import ch.astorm.jchess.JChessGame;
 import ch.astorm.jchess.JChessGame.Status;
-import ch.astorm.jchess.io.PGNParser.PGNParserException;
+import ch.astorm.jchess.io.PGNReader.PGNReaderException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -21,13 +21,13 @@ import org.junit.jupiter.api.Test;
 /*
 A lot of PGN can be found here: https://www.pgnmentor.com/files.html
 */
-public class PGNParserTest {
+public class PGNReaderTest {
     @Test public void testAnandPGN() throws IOException { testPGN("Anand.zip"); }
     @Test public void testNakamuraPGN() throws IOException { testPGN("Nakamura.zip"); }
 
     private void testPGN(String resource) throws IOException {
         String pgn;
-        try(InputStream input = PGNParserTest.class.getResourceAsStream(resource);
+        try(InputStream input = PGNReaderTest.class.getResourceAsStream(resource);
             ZipInputStream zis = new ZipInputStream(input)) {
             ZipEntry entry = zis.getNextEntry();
             pgn = IOUtils.toString(zis, StandardCharsets.UTF_8);
@@ -35,7 +35,7 @@ public class PGNParserTest {
         }
 
         int counter = 1;
-        try(PGNParser parser = new PGNParser(new StringReader(pgn))) {
+        try(PGNReader parser = new PGNReader(new StringReader(pgn))) {
             System.out.print("Parsing game "+counter+"...");
             JChessGame game = parser.readGame();
             while(game!=null) {
@@ -47,7 +47,7 @@ public class PGNParserTest {
                 game = parser.readGame();
             }
             System.out.println(" complete.");
-        } catch(PGNParserException pe) {
+        } catch(PGNReaderException pe) {
             System.err.println("Failure of a game in "+resource);
             System.out.println("Game metadata:");
             pe.getGame().getMetadata().forEach((k,v) -> System.out.println("- "+k+": "+v));
@@ -60,7 +60,7 @@ public class PGNParserTest {
         String pgn =    "[Event \"Wch U20\"]\n" +
                         "\n" +
                         "1.e4 d6 2.d4  0-1";
-        try(PGNParser parser = new PGNParser(new StringReader(pgn))) {
+        try(PGNReader parser = new PGNReader(new StringReader(pgn))) {
             JChessGame game = parser.readGame();
             assertEquals(Status.WIN_BLACK, game.getStatus());
         }
@@ -77,7 +77,7 @@ public class PGNParserTest {
                         "[Event \"Wch U20\"]\n" +
                         "\n" +
                         "1.e4 d6 2.d4  1/2-1/2";
-        try(PGNParser parser = new PGNParser(new StringReader(pgn))) {
+        try(PGNReader parser = new PGNReader(new StringReader(pgn))) {
             JChessGame game1 = parser.readGame();
             assertEquals(Status.WIN_BLACK, game1.getStatus());
             JChessGame game2 = parser.readGame();
@@ -103,10 +103,10 @@ public class PGNParserTest {
                         "[ECO \"B09\"]\n" +
                         "\n" +
                         "1.e4 d6 2.d5  0-1";
-        try(PGNParser parser = new PGNParser(new StringReader(pgn))) {
+        try(PGNReader parser = new PGNReader(new StringReader(pgn))) {
             JChessGame game = parser.readGame();
             fail("Parsing should have failed");
-        } catch(PGNParserException pe) {
+        } catch(PGNReaderException pe) {
             assertNotNull(pe.getGame());
             assertEquals(3, pe.getMoves().size());
         }
@@ -126,7 +126,7 @@ public class PGNParserTest {
                         "[ECO \"B09\"]\n" +
                         "\n" +
                         "0.e4 d6 1.d5  0-1";
-        try(PGNParser parser = new PGNParser(new StringReader(pgn))) {
+        try(PGNReader parser = new PGNReader(new StringReader(pgn))) {
             JChessGame game = parser.readGame();
             fail("Parsing should have failed");
         } catch(IllegalArgumentException pe) {
@@ -148,7 +148,7 @@ public class PGNParserTest {
                         "[ECO \"B09\"]\n" +
                         "\n" +
                         "1.e4 d6 2.d4  1-1";
-        try(PGNParser parser = new PGNParser(new StringReader(pgn))) {
+        try(PGNReader parser = new PGNReader(new StringReader(pgn))) {
             JChessGame game = parser.readGame();
             fail("Parsing should have failed");
         } catch(IllegalStateException pe) {
@@ -170,7 +170,7 @@ public class PGNParserTest {
                         "[ECO \"B09\"]\n" +
                         "\n" +
                         "1.e4 d6 2.d4 d5";
-        try(PGNParser parser = new PGNParser(new StringReader(pgn))) {
+        try(PGNReader parser = new PGNReader(new StringReader(pgn))) {
             JChessGame game = parser.readGame();
             fail("Parsing should have failed");
         } catch(IllegalStateException pe) {

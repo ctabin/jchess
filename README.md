@@ -151,13 +151,13 @@ It is possible to import basic [PGN](https://en.wikipedia.org/wiki/Portable_Game
 as `JChessGame`. Note that the API does not support extended PGN with remarks and deviations.
 
 ```java
-try(PGNParser pgnParser = new PGNParser(/* reader */) {
-    JChessGame game = pgnParser.readGame();
+try(PGNReader pgnReader = new PGNReader(/* reader */) {
+    JChessGame game = pgnReader.readGame();
     while(game!=null) {
         /* handle game */
         
         //read next game, if any
-        game = pgnParser.readGame();
+        game = pgnReader.readGame();
     }
 }
 ```
@@ -168,7 +168,7 @@ The PGN parser supports metadata. This is simply a list of key/value pairs that 
 during the parsing of the file.
 
 ```
-JChessGame game = pgnParser.readGame();
+JChessGame game = pgnReader.readGame();
 
 Map<String,String> metadata = game.getMetadata();
 String result = metadata.get("Result");
