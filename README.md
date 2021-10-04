@@ -53,6 +53,9 @@ parser.doMoves(Arrays.asList("e4","e5","Nf3","Nc6","Bb5","a6","Ba4","Nf6","O-O",
                              "axb4","cxb4","Ra5","Nd5","f3","Bc8","Kf2","Bf5","Ra7","g6",
                              "Ra6+","Kc5","Ke1","Nf4","g3","Nxh3","Kd2","Kb5","Rd6","Kc5",
                              "Ra6","Nf2","g4","Bd3","Re6"));
+
+//agree to a draw
+game.draw();
 ```
 
 ## Usage
@@ -68,7 +71,7 @@ JChessGame game = JChessGame.newGame();
 ```
 
 Once the game is created, it has already the standard chess rules and the initial
-position built in. Hence, the game is ready.
+position built in. Hence, the game is ready and White have the move.
 
 ### Start from a custom position
 
@@ -82,6 +85,8 @@ game.getPosition().put(0, 0, new King(Color.WHITE));
 game.getPosition().put(7, 7, new King(Color.BLACK));
 ```
 
+The example below creates a new game with only the two kings and White to move.
+
 ### Position's legal moves
 
 It is very easy to retrieves all the legal move in a position for the color
@@ -94,8 +99,9 @@ List<Move> legalMoves = game.getAvailableMoves();
 It is also possible to retrieves the legal moves for a given entity:
 
 ```java
-Coordinate kingCoordinate = game.getPosition().findLocation(King.class, Color.WHITE);
-Moveable king = game.getPosition().get(kingCoordinate);
+Position position = game.getPosition();
+Coordinate kingCoordinate = position.findLocation(King.class, Color.WHITE);
+Moveable king = position.get(kingCoordinate);
 List<Move> kingMoves = game.getAvailableMoves(king);
 ```
 
@@ -156,7 +162,7 @@ try(PGNParser pgnParser = new PGNParser(/* reader */) {
 }
 ```
 
-### Metadata
+### Game Metadata
 
 The PGN parser supports metadata. This is simply a list of key/value pairs that are stored
 during the parsing of the file.
@@ -174,8 +180,11 @@ Mainly for debug purposes, jchess provides a simple API to print a position in C
 
 ```java
 System.out.println(PositionRenderer.render(game.getPosition()));
+```
 
-/*
+The result will look like below:
+
+```
   |---|---|---|---|---|---|---|---|
 8 | r | n | b | q | k | b | n | r |
   |---|---|---|---|---|---|---|---|
@@ -194,5 +203,4 @@ System.out.println(PositionRenderer.render(game.getPosition()));
 1 | R | N | B | Q | K | B | N | R |
   |---|---|---|---|---|---|---|---|
     a   b   c   d   e   f   g   h  
-*/
 ```
