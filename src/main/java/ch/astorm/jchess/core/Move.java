@@ -8,7 +8,8 @@ import java.util.List;
  * Represents a move.
  */
 public class Move {
-    private Position position;
+    private Position beforeMove;
+    private Position afterMove;
     private Displacement displacement;
     private List<Displacement> linkedDisplacements;
     private Moveable capturedEntity;
@@ -48,17 +49,26 @@ public class Move {
     }
 
     private Move(Position position, Displacement displacement, List<Displacement> linked, Moveable captured) {
-        this.position = position;
+        this.beforeMove = position;
         this.displacement = displacement;
         this.linkedDisplacements = linked;
         this.capturedEntity = captured;
     }
 
     /**
-     * Returns the {@link Position} in which the move is possible.
+     * Returns the {@link Position} before the move.
      */
-    public Position getPosition() {
-        return position;
+    public Position getPositionBefore() {
+        return beforeMove;
+    }
+
+    /**
+     * Returns the {@link Position} after the move.
+     * This value will be only available once the {@link #apply(ch.astorm.jchess.core.Position)}
+     * method has been invoked.
+     */
+    public Position getPositionAfter() {
+        return afterMove;
     }
 
     /**
@@ -139,5 +149,7 @@ public class Move {
                 position.put(disp.getNewLocation(), disp.getMoveable());
             }
         }
+
+        afterMove = position;
     }
 }

@@ -14,6 +14,13 @@ It is also easy to extend in order to create extended chess rules, new pieces an
 This API does NOT provide any chess engine for position analysis. However, this API could
 be very easily used by an engine to do such task.
 
+The main features of this API are:
+- Standard chess rules
+- Custom positions
+- PGN import
+- PGN export
+- Game metadata
+
 ## Installation (maven)
 
 Use the following dependency in your `pom.xml`:
@@ -159,6 +166,21 @@ try(PGNReader pgnReader = new PGNReader(/* reader */) {
         //read next game, if any
         game = pgnReader.readGame();
     }
+}
+```
+
+Note: the PGN format used `ISO-8859-1` encoding.
+
+### Export games to PGN files
+
+Once a `JChessGame` has been created, the PGN export is straightforward and can
+export multiple games.
+
+```java
+try(PGNWriter pgnWriter = new PGNWriter(/* writer */)) {
+    pgnWriter.write(game1);
+    pgnWriter.write(game2);
+    pgnWriter.write(game3);
 }
 ```
 

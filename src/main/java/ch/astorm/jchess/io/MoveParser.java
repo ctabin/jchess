@@ -7,19 +7,20 @@ import ch.astorm.jchess.core.Color;
 import ch.astorm.jchess.core.Coordinate;
 import ch.astorm.jchess.core.Move;
 import ch.astorm.jchess.core.Moveable;
+import ch.astorm.jchess.core.Position;
 import ch.astorm.jchess.core.entities.Bishop;
 import ch.astorm.jchess.core.entities.King;
 import ch.astorm.jchess.core.entities.Knight;
 import ch.astorm.jchess.core.entities.Pawn;
 import ch.astorm.jchess.core.entities.Queen;
 import ch.astorm.jchess.core.entities.Rook;
-import ch.astorm.jchess.util.PositionRenderer;
+import ch.astorm.jchess.core.rules.Displacement;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.apache.commons.collections4.BidiMap;
+import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 
 /**
  * Handles the parsing of a move (generally from a PGN file).
@@ -27,13 +28,35 @@ import java.util.stream.Collectors;
 public class MoveParser {
     private JChessGame game;
 
-    private static final char CAPTURE_SEPARATOR = 'x';
-    private static final char PROMOTION_SEPARATOR = '=';
-    private static final char CHECK = '+';
-    private static final String SMALL_CASTLE = "O-O";
-    private static final String BIG_CASTLE = "O-O-O";
+    /**
+     * Capture separator.
+     */
+    public static final char CAPTURE_SEPARATOR = 'x';
 
-    private static final Map<Character, Integer> COLUMN_MAPPING = new HashMap<>(){{
+    /**
+     * Promotion separator.
+     */
+    public static final char PROMOTION_SEPARATOR = '=';
+
+    /**
+     * Check sign.
+     */
+    public static final char CHECK = '+';
+
+    /**
+     * Small castling.
+     */
+    public static final String SMALL_CASTLING = "O-O";
+
+    /**
+     * Big castling.
+     */
+    public static final String BIG_CASTLING = "O-O-O";
+
+    /**
+     * Columns to letter map.
+     */
+    public static final BidiMap<Character, Integer> COLUMN_MAPPING = new DualHashBidiMap<>(){{
         put('a', 0);
         put('b', 1);
         put('c', 2);
@@ -44,7 +67,10 @@ public class MoveParser {
         put('h', 7);
     }};
 
-    private static final Map<Character, Class<? extends Moveable>> ENTITY_MAPPING = new HashMap<>(){{
+    /**
+     * Entities mapping.
+     */
+    public static final BidiMap<Character, Class<? extends Moveable>> ENTITY_MAPPING = new DualHashBidiMap<>(){{
         put('K', King.class);
         put('Q', Queen.class);
         put('B', Bishop.class);
@@ -129,13 +155,13 @@ public class MoveParser {
     private Move getMoveWithoutPromotion(String moveStr) {
         Color colorToMove = game.getColorToMove();
         List<Move> availableMoves = game.getAvailableMoves();
-        if(moveStr.startsWith(SMALL_CASTLE) || moveStr.startsWith(BIG_CASTLE)) {
+        if(moveStr.startsWith(SMALL_CASTLING) || moveStr.startsWith(BIG_CASTLING)) {
             String cleanedMove = moveStr.replace(""+CHECK, "");
             Optional<Move> castleMove = availableMoves.stream().
                     filter(m -> m.getDisplacement().getMoveable().getColor()==colorToMove).
                     filter(m -> m.getDisplacement().getMoveable().getClass()==King.class).
                     filter(m -> m.getLinkedDisplacements()!=null && m.getLinkedDisplacements().size()==1).
-                    filter(m -> cleanedMove.equals(SMALL_CASTLE) ? m.getDisplacement().getNewLocation().getColumn()==6 : m.getDisplacement().getNewLocation().getColumn()==2).
+                    filter(m -> cleanedMove.equals(SMALL_CASTLING) ? m.getDisplacement().getNewLocation().getColumn()==6 : m.getDisplacement().getNewLocation().getColumn()==2).
                     findFirst();
             return castleMove.orElseThrow(() -> new InvalidMoveException(moveStr+" is not a legal move", moveStr));
         }
@@ -208,5 +234,71 @@ public class MoveParser {
         if(filteredMoves.isEmpty()) { throw new InvalidMoveException(moveStr+" does not exist (filtered out of "+possibleMoves.size()+" possible moves)", moveStr); }
         if(filteredMoves.size()>1) { throw new InvalidMoveException(moveStr+" is [still] ambiguous ("+possibleMoves.size()+" possible moves for "+colorToMove+")", moveStr); }
         return filteredMoves.get(0);
+    }
+
+    /**
+     * Returns the {@code move} in algebraic notation.
+     */
+    public static String getMoveString(Move move) {
+        Displacement displacement = move.getDisplacement();
+        Moveable moveable = displacement.getMoveable();
+
+        Color currentColor = moveable.getColor();
+        Position positionAfter = move.getPositionAfter();
+        Coordinate oppositeKingLocation = positionAfter.findLocation(King.class, currentColor.opposite());
+        boolean isOppositeKingInCheck = positionAfter.canBeReached(oppositeKingLocation, currentColor);
+
+        if(move.getLinkedDisplacements()!=null) {
+            int newColumn = displacement.getNewLocation().getColumn();
+            return newColumn==2 ? BIG_CASTLING : SMALL_CASTLING;
+        }
+
+
+        Character moveableChar = ENTITY_MAPPING.getKey(moveable.getClass());
+        String moveableStr = moveableChar!=null ? ""+moveableChar : "";
+
+        Coordinate newLocation = displacement.getNewLocation();
+        Character column = COLUMN_MAPPING.getKey(newLocation.getColumn());
+        String newLocationStr = column+""+(newLocation.getRow()+1);
+
+        boolean isCapture = move.getCapturedEntity()!=null;
+
+        String ambiguousStr = "";
+        if(moveable instanceof Pawn) {
+            if(isCapture) {
+                Coordinate oldLocation = displacement.getOldLocation();
+                ambiguousStr = ""+COLUMN_MAPPING.getKey(oldLocation.getColumn());
+            }
+        } else {
+            boolean isAmbigous = false;
+            boolean ambigousColumn = false;
+            boolean ambigousRow = false;
+            Coordinate oldLocation = displacement.getOldLocation();
+            Position position = move.getPositionBefore();
+            for(Moveable otherMoveable : position.getMoveables(moveable.getColor())) {
+                if(otherMoveable==moveable) { continue; }
+                if(otherMoveable.getClass()!=moveable.getClass()) { continue; }
+                if(!position.canBeReachedBy(newLocation, otherMoveable)) { continue; }
+
+                Coordinate otherLocation = position.getLocation(otherMoveable);
+                ambigousColumn |= otherLocation.getColumn()==oldLocation.getColumn();
+                ambigousRow |= otherLocation.getRow()==oldLocation.getRow();
+                isAmbigous |= true;
+            }
+
+            if(isAmbigous) {
+                if(ambigousRow || !ambigousColumn) { ambiguousStr += COLUMN_MAPPING.getKey(oldLocation.getColumn()); }
+                if(ambigousColumn) { ambiguousStr += ""+(oldLocation.getRow()+1); }
+            }
+        }
+
+        String promotionStr = "";
+        if(move.isPromotionNeeded()) {
+            Character promotionChar = ENTITY_MAPPING.getKey(move.getPromotion().getClass());
+            promotionStr = PROMOTION_SEPARATOR+""+promotionChar;
+        }
+
+        return moveableStr+ambiguousStr+(isCapture ? CAPTURE_SEPARATOR : "")+
+               newLocationStr+promotionStr+(isOppositeKingInCheck ? CHECK : "");
     }
 }
