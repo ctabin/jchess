@@ -6,6 +6,7 @@ import ch.astorm.jchess.io.MoveParser;
 import ch.astorm.jchess.io.MoveParser.InvalidMoveException;
 import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 public class PawnTest {
@@ -18,10 +19,10 @@ public class PawnTest {
         mover.doMoves(Arrays.asList("c4", "h4"));
         mover.doMoves(Arrays.asList("c5", "d5"));
 
-        mover.doMove("cxd6"); game.back();
-        mover.doMove("exd6"); game.back();
+        mover.doMove("cxd6"); assertTrue(game.back());
+        mover.doMove("exd6"); assertTrue(game.back());
 
-        game.back();
+        assertTrue(game.back());
         mover.doMove("d6");
         mover.doMove("h3");
         mover.doMove("d5");
@@ -40,9 +41,9 @@ public class PawnTest {
         mover.doMoves(Arrays.asList("h6", "c4"));
         mover.doMove("d4");
 
-        mover.doMove("cxd3"); game.back();
-        mover.doMove("exd3"); game.back();
-        game.back();
+        mover.doMove("cxd3"); assertTrue(game.back());
+        mover.doMove("exd3"); assertTrue(game.back());
+        assertTrue(game.back());
 
         mover.doMove("d3");
         mover.doMove("a6");

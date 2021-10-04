@@ -200,14 +200,18 @@ public class JChessGame {
 
     /**
      * Returns back to the previous position and resets the game status accordingly.
+     * If there is no previous position available, this method returns false.
      *
-     * @return The current position.
+     * @return True if the previous position has been set.
      */
-    public Position back() {
+    public boolean back() {
+        Position previous = position.getPreviousPosition();
+        if(previous==null) { return false; }
+
         Position current = position;
-        position = position.getPreviousPosition();
+        position = previous;
         status = ruleManager.getEndgameStatus(position);
-        return current;
+        return true;
     }
 
     /**
