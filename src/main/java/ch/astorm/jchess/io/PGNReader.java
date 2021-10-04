@@ -135,7 +135,7 @@ public class PGNReader extends BufferedReader {
         StringBuilder moves = new StringBuilder(256);
         String moveLine = nextLine();
         while(moveLine!=null) {
-            if(moveLine.startsWith("[")) {
+            if(moveLine.startsWith("[") || (moveLine.startsWith("1.") && moves.length()>0)) {
                 buffer.add(moveLine);
                 break;
             }
