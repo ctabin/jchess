@@ -39,6 +39,8 @@ public class JChessGameTest {
         game.getPosition().put(0, 0, new King(Color.WHITE));
         game.getPosition().put(7, 7, new King(Color.BLACK));
 
+        assertEquals(false, game.back());
+
         MoveParser parser = new MoveParser(game);
         assertEquals(JChessGame.Status.DRAW, parser.doMove("Ka2"));
     }
