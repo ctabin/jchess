@@ -71,7 +71,7 @@ public class PawnDisplacementRule implements DisplacementRule<Pawn> {
             if(lastMove.getDisplacement().getMoveable()!=captured) { return null; }
             if(lastMove.getDisplacement().getOldLocation().getRow()!=1 && lastMove.getDisplacement().getOldLocation().getRow()!=Board.DEFAULT_ROWS-2) { return null; }
 
-            return new Move(new Displacement(pawn, location, afterLocation), captured);
+            return new Move(position, new Displacement(pawn, location, afterLocation), captured);
         }
 
         return null;
@@ -82,7 +82,7 @@ public class PawnDisplacementRule implements DisplacementRule<Pawn> {
 
         Moveable captured = position.get(captureLocation);
         if(captured!=null && captured.getColor()==pawn.getColor().opposite()) {
-            return new PawnMove(new Displacement(pawn, location, captureLocation), captured);
+            return new PawnMove(position, new Displacement(pawn, location, captureLocation), captured);
         }
 
         return null;
@@ -91,7 +91,7 @@ public class PawnDisplacementRule implements DisplacementRule<Pawn> {
     private Move getPushMove(Position position, Coordinate location, Pawn pawn, int direction, int mult) {
         Coordinate front = location.to(direction*mult, 0);
         if(!position.getBoard().isValid(front)) { return null; }
-        if(position.get(front)==null) {return new PawnMove(new Displacement(pawn, location, front)); }
+        if(position.get(front)==null) {return new PawnMove(position, new Displacement(pawn, location, front)); }
         return null;
     }
 
@@ -101,13 +101,13 @@ public class PawnDisplacementRule implements DisplacementRule<Pawn> {
 }
 
 class PawnMove extends Move {
-    public PawnMove(Displacement displacement) {
-        super(displacement);
+    public PawnMove(Position position, Displacement displacement) {
+        super(position, displacement);
         setPromotionFlag();
     }
 
-    public PawnMove(Displacement displacement, Moveable captured) {
-        super(displacement, captured);
+    public PawnMove(Position position, Displacement displacement, Moveable captured) {
+        super(position, displacement, captured);
         setPromotionFlag();
     }
 

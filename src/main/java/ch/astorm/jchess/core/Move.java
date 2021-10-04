@@ -8,6 +8,7 @@ import java.util.List;
  * Represents a move.
  */
 public class Move {
+    private Position position;
     private Displacement displacement;
     private List<Displacement> linkedDisplacements;
     private Moveable capturedEntity;
@@ -17,36 +18,47 @@ public class Move {
     /**
      * Creates a simple move.
      *
+     * @param position The position.
      * @param displacement The displacement.
      */
-    public Move(Displacement displacement) {
-        this(displacement, null, null);
+    public Move(Position position, Displacement displacement) {
+        this(position, displacement, null, null);
     }
 
     /**
      * Creates a simple move with a capture.
      *
+     * @param position The position.
      * @param displacement The displacement.
      * @param captured The captured {@link Moveable}.
      */
-    public Move(Displacement displacement, Moveable captured) {
-        this(displacement, null, captured);
+    public Move(Position position, Displacement displacement, Moveable captured) {
+        this(position, displacement, null, captured);
     }
 
     /**
      * Creates a multi-displacement move (castling).
      *
+     * @param position The position.
      * @param displacement The main displacement.
      * @param linked The linked displacements or null.
      */
-    public Move(Displacement displacement, List<Displacement> linked) {
-        this(displacement, linked, null);
+    public Move(Position position, Displacement displacement, List<Displacement> linked) {
+        this(position, displacement, linked, null);
     }
 
-    private Move(Displacement displacement, List<Displacement> linked, Moveable captured) {
+    private Move(Position position, Displacement displacement, List<Displacement> linked, Moveable captured) {
+        this.position = position;
         this.displacement = displacement;
         this.linkedDisplacements = linked;
         this.capturedEntity = captured;
+    }
+
+    /**
+     * Returns the {@link Position} in which the move is possible.
+     */
+    public Position getPosition() {
+        return position;
     }
 
     /**
