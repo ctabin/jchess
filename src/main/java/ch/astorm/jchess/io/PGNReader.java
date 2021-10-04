@@ -12,21 +12,21 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Parses PGN files.
- * Note this parser only supports basic PGN files. Comments and deviations are not
+ * Reads PGN files.
+ * Note this reader only supports basic PGN files. Comments and deviations are not
  * supported.
  */
-public class PGNParser extends BufferedReader {
-    private List<String> buffer = new ArrayList<>();
+public class PGNReader extends BufferedReader {
+    private final List<String> buffer = new ArrayList<>();
 
     /**
      * Exception thrown when a game cannot be replayed by {@link JChessGame}.
      */
-    public static class PGNParserException extends RuntimeException {
+    public static class PGNReaderException extends RuntimeException {
         private JChessGame game;
         private List<String> moves;
 
-        public PGNParserException(Throwable cause, JChessGame game, List<String> moves) {
+        public PGNReaderException(Throwable cause, JChessGame game, List<String> moves) {
             super(cause);
             this.game = game;
             this.moves = moves;
@@ -48,9 +48,9 @@ public class PGNParser extends BufferedReader {
     }
 
     /**
-     * Creates a new {@code PGNParser} from the specified {@code reader}.
+     * Creates a new {@code PGNReader} from the specified {@code reader}.
      */
-    public PGNParser(Reader reader) {
+    public PGNReader(Reader reader) {
         super(reader);
     }
 
@@ -72,7 +72,7 @@ public class PGNParser extends BufferedReader {
         MoveParser moveParser = new MoveParser(game);
 
         try { moveParser.doMoves(parsedMoves); }
-        catch(Exception e) { throw new PGNParserException(e, game, parsedMoves); }
+        catch(Exception e) { throw new PGNReaderException(e, game, parsedMoves); }
 
         if(moves.endsWith("1-0")) { game.resign(Color.BLACK); }
         else if(moves.endsWith("0-1")) { game.resign(Color.WHITE); }
