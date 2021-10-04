@@ -67,6 +67,15 @@ public class PGNReaderTest {
     }
 
     @Test
+    public void testValidPGNNoHeader() throws Exception {
+        String pgn =    "1.e4 d6 2.d4  0-1";
+        try(PGNReader parser = new PGNReader(new StringReader(pgn))) {
+            JChessGame game = parser.readGame();
+            assertEquals(Status.WIN_BLACK, game.getStatus());
+        }
+    }
+
+    @Test
     public void testMuptileValidPGN() throws Exception {
         String pgn =    "[Event \"Wch U20\"]\n" +
                         "\n" +
@@ -76,6 +85,23 @@ public class PGNReaderTest {
                         "1.e4 d6 2.d4  1-0\n\n" +
                         "[Event \"Wch U20\"]\n" +
                         "\n" +
+                        "1.e4 d6 2.d4  1/2-1/2";
+        try(PGNReader parser = new PGNReader(new StringReader(pgn))) {
+            JChessGame game1 = parser.readGame();
+            assertEquals(Status.WIN_BLACK, game1.getStatus());
+            JChessGame game2 = parser.readGame();
+            assertEquals(Status.WIN_WHITE, game2.getStatus());
+            JChessGame game3 = parser.readGame();
+            assertEquals(Status.DRAW, game3.getStatus());
+            JChessGame game4 = parser.readGame();
+            assertNull(game4);
+        }
+    }
+
+    @Test
+    public void testMuptileValidPGNNoHeader() throws Exception {
+        String pgn =    "1.e4 d6 2.d4  0-1\n\n" +
+                        "1.e4 d6 2.d4  1-0\n\n" +
                         "1.e4 d6 2.d4  1/2-1/2";
         try(PGNReader parser = new PGNReader(new StringReader(pgn))) {
             JChessGame game1 = parser.readGame();
