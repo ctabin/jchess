@@ -53,6 +53,7 @@ public class RuleManager {
      * @param moveable The {@link Moveable} entity.
      * @return The displacement rule to apply.
      */
+    @SuppressWarnings("unchecked")
     public <T extends Moveable> DisplacementRule<T> getDisplacementRule(T moveable) {
         if(moveable instanceof Pawn) { return (DisplacementRule<T>)RULE_PAWN; }
         if(moveable instanceof Bishop) { return (DisplacementRule<T>)RULE_BISHOP; }
