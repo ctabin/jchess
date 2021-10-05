@@ -75,7 +75,7 @@ public class RuleManager {
         List<Move> availableLegalMoves = position.getLegalMoves();
         if(availableLegalMoves.isEmpty()) {
             Coordinate king = position.findLocation(King.class, color);
-            if(king==null) { throw new IllegalStateException("No "+color+" king in position"); }
+            if(king==null) { return Status.NOT_FINISHED; }
 
             boolean isInCheck = position.canBeReached(king, color.opposite());
             if(!isInCheck) { return Status.DRAW_STALEMATE; }
