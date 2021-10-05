@@ -54,20 +54,6 @@ public class MoveParser {
     public static final String BIG_CASTLING = "O-O-O";
 
     /**
-     * Columns to letter map.
-     */
-    public static final BidiMap<Character, Integer> COLUMN_MAPPING = new DualHashBidiMap<>(){{
-        put('a', 0);
-        put('b', 1);
-        put('c', 2);
-        put('d', 3);
-        put('e', 4);
-        put('f', 5);
-        put('g', 6);
-        put('h', 7);
-    }};
-
-    /**
      * Entities mapping.
      */
     public static final BidiMap<Character, Class<? extends Moveable>> ENTITY_MAPPING = new DualHashBidiMap<>(){{
@@ -187,22 +173,21 @@ public class MoveParser {
             isCapture = true;
         }
 
-        Integer columnIndex = COLUMN_MAPPING.get(columnChar);
-        if(columnIndex==null) {
+        int maxColumns = game.getPosition().getBoard().getColumnsCount();
+        int columnIndex = columnChar-'a';
+        if(columnIndex<0 || columnIndex>=maxColumns) {
             if(columnChar!=CAPTURE_SEPARATOR) { throw new IllegalArgumentException("Invalid move: "+moveStr); }
             isCapture = true;
 
             ++charPosition;
             columnChar = moveStr.charAt(charPosition);
-            columnIndex = COLUMN_MAPPING.get(columnChar);
-            if(columnIndex==null) { throw new IllegalArgumentException("Invalid move: "+moveStr); }
+            columnIndex = columnChar-'a';
+            if(columnIndex<0 || columnIndex>=maxColumns) { throw new IllegalArgumentException("Invalid move: "+moveStr); }
         }
 
         ++charPosition;
         char rowChar = moveStr.charAt(charPosition);
-        int rowIndex;
-        try { rowIndex = Integer.parseInt(rowChar+"")-1; }
-        catch(NumberFormatException nfe) { throw new IllegalArgumentException("Invalid move (parsing "+rowChar+"): "+moveStr); }
+        int rowIndex = rowChar-'1';
 
         Coordinate target = new Coordinate(rowIndex, columnIndex);
         if(!game.getPosition().getBoard().isValid(target)) { throw new IllegalArgumentException("Invalid move: "+moveStr); }
@@ -221,9 +206,9 @@ public class MoveParser {
         int ambigousColumnIndexFilter;
         if(ambigousMoveCharFilter>='a' && ambigousMoveCharFilter<='h') {
             ambigousRowIndexFilter = -1;
-            ambigousColumnIndexFilter = COLUMN_MAPPING.get(ambigousMoveCharFilter);
+            ambigousColumnIndexFilter = ambigousMoveCharFilter-'a';
         } else {
-            ambigousRowIndexFilter = Integer.parseInt(""+ambigousMoveCharFilter)-1;
+            ambigousRowIndexFilter = ambigousMoveCharFilter-'1';
             ambigousColumnIndexFilter = -1;
         }
 
@@ -258,7 +243,7 @@ public class MoveParser {
         String moveableStr = moveableChar!=null ? ""+moveableChar : "";
 
         Coordinate newLocation = displacement.getNewLocation();
-        Character column = COLUMN_MAPPING.getKey(newLocation.getColumn());
+        char column = (char)('a'+newLocation.getColumn());
         String newLocationStr = column+""+(newLocation.getRow()+1);
 
         boolean isCapture = move.getCapturedEntity()!=null;
@@ -267,7 +252,7 @@ public class MoveParser {
         if(moveable instanceof Pawn) {
             if(isCapture) {
                 Coordinate oldLocation = displacement.getOldLocation();
-                ambiguousStr = ""+COLUMN_MAPPING.getKey(oldLocation.getColumn());
+                ambiguousStr = ""+((char)('a'+oldLocation.getColumn()));
             }
         } else {
             boolean isAmbigous = false;
@@ -287,7 +272,7 @@ public class MoveParser {
             }
 
             if(isAmbigous) {
-                if(ambigousRow || !ambigousColumn) { ambiguousStr += COLUMN_MAPPING.getKey(oldLocation.getColumn()); }
+                if(ambigousRow || !ambigousColumn) { ambiguousStr += ((char)('a'+oldLocation.getColumn())); }
                 if(ambigousColumn) { ambiguousStr += ""+(oldLocation.getRow()+1); }
             }
         }

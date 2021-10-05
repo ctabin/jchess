@@ -228,7 +228,18 @@ public class Position {
     }
 
     /**
-     * Returns the {@link Moveable} entity at the specified position or null if there
+     * Returns the {@link Moveable} entity at the specified location or null if there
+     * is none.
+     *
+     * @param algebraicCoordinate The coordinate (eg 'e5').
+     * @return The {@link Moveable} or null.
+     */
+    public Moveable get(String algebraicCoordinate) {
+        return get(new Coordinate(algebraicCoordinate));
+    }
+
+    /**
+     * Returns the {@link Moveable} entity at the specified location or null if there
      * is none.
      *
      * @param row The row index (zero-based).
@@ -240,7 +251,7 @@ public class Position {
     }
 
     /**
-     * Returns the {@link Moveable} entity at the specified position or null if there
+     * Returns the {@link Moveable} entity at the specified location or null if there
      * is none.
      *
      * @param location The location.
@@ -249,6 +260,17 @@ public class Position {
     public Moveable get(Coordinate location) {
         checkCoordinate(location);
         return moveables.get(location);
+    }
+
+    /**
+     * Puts the given {@code moveable} at the specified coordinates.
+     *
+     * @param algebraicCoordinate The coordinate (eg 'e5').
+     * @param moveable The moveable or null to remove the entity.
+     * @return The removed {@code Moveable} at the coordinates.
+     */
+    public Moveable put(String algebraicCoordinate, Moveable moveable) {
+        return put(new Coordinate(algebraicCoordinate), moveable);
     }
 
     /**

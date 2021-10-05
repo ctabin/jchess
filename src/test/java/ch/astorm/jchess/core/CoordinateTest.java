@@ -7,6 +7,19 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CoordinateTest {
 
     @Test
+    public void testAlgebraicNotation() {
+        Coordinate e = new Coordinate("e2");
+        assertEquals(4, e.getColumn());
+        assertEquals(1, e.getRow());
+        assertEquals("e2", e.toString());
+
+        Coordinate z = new Coordinate("z9");
+        assertEquals(25, z.getColumn());
+        assertEquals(8, z.getRow());
+        assertEquals("z9", z.toString());
+    }
+
+    @Test
     public void testProperties() {
         Coordinate c = new Coordinate(0, 1);
         assertEquals(0, c.getRow());

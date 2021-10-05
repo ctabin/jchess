@@ -17,6 +17,8 @@ import ch.astorm.jchess.util.PositionRenderer;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
@@ -25,6 +27,9 @@ public class JChessGameTest {
     @Test
     public void testInitialPosition() {
         JChessGame game = JChessGame.newGame();
+        assertNull(game.get("e5"));
+        assertNotNull(game.get("a1"));
+
         assertEquals(20, game.getAvailableMoves().size());
 
         Coordinate kingLocation = game.getPosition().findLocation(King.class, Color.WHITE);
@@ -33,13 +38,16 @@ public class JChessGameTest {
 
         String str = PositionRenderer.render(game.getPosition());
         assertEquals(648, str.length());
+
+        assertNull(game.getAvailableMoves("e5"));
+        assertTrue(game.getAvailableMoves("e1").isEmpty());
     }
 
     @Test
     public void testDrawByInsufficiantMaterialKingKing() {
         JChessGame game = JChessGame.newEmptyGame(Color.WHITE);
-        game.getPosition().put(0, 0, new King(Color.WHITE));
-        game.getPosition().put(7, 7, new King(Color.BLACK));
+        game.put("a1", new King(Color.WHITE));
+        game.put("h8", new King(Color.BLACK));
         assertFalse(game.getStatus().isFinished());
 
         assertEquals(false, game.back());
@@ -53,9 +61,9 @@ public class JChessGameTest {
     public void testDrawByInsufficiantMaterialKingBishop() {
         {
             JChessGame game = JChessGame.newEmptyGame(Color.WHITE);
-            game.getPosition().put(0, 0, new King(Color.WHITE));
-            game.getPosition().put(7, 7, new King(Color.BLACK));
-            game.getPosition().put(6, 6, new Bishop(Color.BLACK));
+            game.put("a1", new King(Color.WHITE));
+            game.put("h8", new King(Color.BLACK));
+            game.put("g7", new Bishop(Color.BLACK));
 
             MoveParser parser = new MoveParser(game);
             assertEquals(JChessGame.Status.DRAW, parser.doMove("Ka2"));
@@ -63,9 +71,9 @@ public class JChessGameTest {
 
         {
             JChessGame game = JChessGame.newEmptyGame(Color.WHITE);
-            game.getPosition().put(0, 0, new King(Color.BLACK));
-            game.getPosition().put(7, 7, new King(Color.WHITE));
-            game.getPosition().put(6, 6, new Bishop(Color.WHITE));
+            game.put("a1", new King(Color.BLACK));
+            game.put("h8", new King(Color.WHITE));
+            game.put("g7", new Bishop(Color.WHITE));
 
             MoveParser parser = new MoveParser(game);
             assertEquals(JChessGame.Status.DRAW, parser.doMove("Kg8"));
@@ -76,9 +84,9 @@ public class JChessGameTest {
     public void testDrawByInsufficiantMaterialKingKnight() {
         {
             JChessGame game = JChessGame.newEmptyGame(Color.WHITE);
-            game.getPosition().put(0, 0, new King(Color.WHITE));
-            game.getPosition().put(7, 7, new King(Color.BLACK));
-            game.getPosition().put(6, 6, new Knight(Color.BLACK));
+            game.put("a1", new King(Color.WHITE));
+            game.put("h8", new King(Color.BLACK));
+            game.put("g7", new Knight(Color.BLACK));
 
             MoveParser parser = new MoveParser(game);
             assertEquals(JChessGame.Status.DRAW, parser.doMove("Ka2"));
@@ -86,9 +94,9 @@ public class JChessGameTest {
 
         {
             JChessGame game = JChessGame.newEmptyGame(Color.WHITE);
-            game.getPosition().put(0, 0, new King(Color.BLACK));
-            game.getPosition().put(7, 7, new King(Color.WHITE));
-            game.getPosition().put(6, 6, new Knight(Color.WHITE));
+            game.put("a1", new King(Color.BLACK));
+            game.put("h8", new King(Color.WHITE));
+            game.put("g7", new Knight(Color.WHITE));
 
             MoveParser parser = new MoveParser(game);
             assertEquals(JChessGame.Status.DRAW, parser.doMove("Kg8"));
@@ -99,9 +107,9 @@ public class JChessGameTest {
     public void testNoDrawSufficiantMaterial() {
         {
             JChessGame game = JChessGame.newEmptyGame(Color.WHITE);
-            game.getPosition().put(0, 0, new King(Color.WHITE));
-            game.getPosition().put(7, 7, new King(Color.BLACK));
-            game.getPosition().put(6, 6, new Rook(Color.BLACK));
+            game.put("a1", new King(Color.WHITE));
+            game.put("h8", new King(Color.BLACK));
+            game.put("g7", new Rook(Color.BLACK));
 
             MoveParser parser = new MoveParser(game);
             assertEquals(JChessGame.Status.NOT_FINISHED, parser.doMove("Ka2"));
@@ -109,9 +117,9 @@ public class JChessGameTest {
 
         {
             JChessGame game = JChessGame.newEmptyGame(Color.WHITE);
-            game.getPosition().put(0, 0, new King(Color.BLACK));
-            game.getPosition().put(7, 7, new King(Color.WHITE));
-            game.getPosition().put(6, 6, new Rook(Color.WHITE));
+            game.put("a1", new King(Color.BLACK));
+            game.put("h8", new King(Color.WHITE));
+            game.put("g7", new Rook(Color.WHITE));
 
             MoveParser parser = new MoveParser(game);
             assertEquals(JChessGame.Status.NOT_FINISHED, parser.doMove("Kg8"));
@@ -121,9 +129,9 @@ public class JChessGameTest {
     @Test
     public void testDrawByNoCapture() {
         JChessGame game = JChessGame.newEmptyGame(Color.WHITE);
-        game.getPosition().put(0, 0, new King(Color.WHITE));
-        game.getPosition().put(7, 7, new King(Color.BLACK));
-        game.getPosition().put(6, 6, new Rook(Color.BLACK));
+        game.put("a1", new King(Color.WHITE));
+        game.put("h8", new King(Color.BLACK));
+        game.put("g7", new Rook(Color.BLACK));
 
         int incr = 0;
         while(game.getStatus()==Status.NOT_FINISHED) {
@@ -146,9 +154,9 @@ public class JChessGameTest {
     @Test
     public void testDrawByRepetition() {
         JChessGame game = JChessGame.newEmptyGame(Color.WHITE);
-        game.getPosition().put(0, 0, new King(Color.WHITE));
-        game.getPosition().put(7, 7, new King(Color.BLACK));
-        game.getPosition().put(6, 6, new Rook(Color.BLACK));
+        game.put("a1", new King(Color.WHITE));
+        game.put("h8", new King(Color.BLACK));
+        game.put("g7", new Rook(Color.BLACK));
 
         MoveParser parser = new MoveParser(game);
         while(game.getStatus()==Status.NOT_FINISHED) {
@@ -164,9 +172,9 @@ public class JChessGameTest {
     @Test
     public void testDrawByStalemate() {
         JChessGame game = JChessGame.newEmptyGame(Color.WHITE);
-        game.getPosition().put(0, 0, new King(Color.WHITE));
-        game.getPosition().put(0, 1, new Queen(Color.WHITE));
-        game.getPosition().put(7, 7, new King(Color.BLACK));
+        game.put("a1", new King(Color.WHITE));
+        game.put("b1", new Queen(Color.WHITE));
+        game.put("h8", new King(Color.BLACK));
 
         MoveParser parser = new MoveParser(game);
         assertEquals(Status.DRAW_STALEMATE, parser.doMove("Qg6"));

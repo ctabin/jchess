@@ -51,12 +51,13 @@ public class PGNReadWriteTest {
             }
             System.out.println(" complete.");
         } catch(PGNReaderException pe) {
+            System.err.println();
             System.err.println("Failure of game "+counter+" in "+resource);
             System.err.println("------------------------------------------");
             System.err.println("Game metadata:");
             pe.getGame().getMetadata().forEach((k,v) -> System.out.println("- "+k+": "+v));
             System.err.println("------------------------------------------");
-            System.err.println("Position before the move:");
+            System.err.println("Position before the move:\n");
             System.err.println(PositionRenderer.render(pe.getGame().getPosition()));
             System.err.println("==========================================");
             fail("Unable to parse PGN game", pe);
