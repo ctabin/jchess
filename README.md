@@ -19,6 +19,7 @@ This API is compiled with the JDK 11.
 The main features of this API are:
 - Ease of use
 - Standard chess rules
+- Algebraic notation
 - Custom positions
 - PGN import
 - PGN export
@@ -178,6 +179,13 @@ game.doMove("Nc3","e6");
 
 Each move will update the current position and automatically switch the `Color` being on the move.
 It is possible to go back in the move by using the `game.back()` method.
+
+You may want to access a possible move in the position without actually playing it:
+
+```java
+Move move1 = game.getMove("Nxd4");
+Move move2 = game.getMove("d8=Q");
+```
 
 ### Game status
 

@@ -92,6 +92,7 @@ public class MoveParser {
      *
      * @param moveStr The algebraic chess notation move (such as 'e4' or 'Kb3').
      * @return The move or null if invalid.
+     * @throws InvalidMoveException If {@code moveStr} is invalid.
      */
     public Move getMove(String moveStr) {
         Move move = getMoveWithoutPromotion(moveStr);
@@ -213,7 +214,6 @@ public class MoveParser {
             int newColumn = displacement.getNewLocation().getColumn();
             return newColumn==2 ? BIG_CASTLING : SMALL_CASTLING;
         }
-
 
         Character moveableChar = ENTITY_MAPPING.getKey(moveable.getClass());
         String moveableStr = moveableChar!=null ? ""+moveableChar : "";

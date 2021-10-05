@@ -60,7 +60,10 @@ public class JChessGameTest {
     public void testStartPositionInversed() {
         JChessGame game = JChessGame.newGame();
         assertEquals(Color.BLACK, game.switchColorOnMove());
-        game.doMove("e5", "e4");
+        game.doMove("e5", "d4");
+
+        Move captureMove = game.getMove("exd4");
+        assertEquals("exd4", captureMove.toString());
     }
 
     @Test

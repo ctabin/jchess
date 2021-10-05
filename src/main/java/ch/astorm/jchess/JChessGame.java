@@ -14,6 +14,7 @@ import ch.astorm.jchess.core.entities.Queen;
 import ch.astorm.jchess.core.entities.Rook;
 import ch.astorm.jchess.core.rules.RuleManager;
 import ch.astorm.jchess.io.MoveParser;
+import ch.astorm.jchess.io.MoveParser.InvalidMoveException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -214,6 +215,17 @@ public class JChessGame {
     }
 
     /**
+     * Returns the {@link Move} corresponding to the specified {@code algebraicNotation}.
+     *
+     * @param algebraicNotation
+     * @return The {@link Move}.
+     * @throws InvalidMoveException If the {@code algebraicNotation} does not map to a legal move.
+     */
+    public Move getMove(String algebraicNotation) {
+        return moveParser.getMove(algebraicNotation);
+    }
+
+    /**
      * Executes the specified {@code move}.
      *
      * @param move The move.
@@ -231,16 +243,15 @@ public class JChessGame {
      * @param algebraicNotation The (first) move (eg 'Nxb5').
      * @param otherMoves The other move to play (by alternating colors) in algebraic notation.
      * @return The game status after the move.
+     * @throws InvalidMoveException If one of the move does not map to a legal move.
      */
     public Status doMove(String algebraicNotation, String... otherMoves) {
         if(!status.isPlayAllowed()) { throw new IllegalStateException("Game is "+status); }
 
-        Move move = moveParser.getMove(algebraicNotation);
-        apply(move);
-
+        apply(getMove(algebraicNotation));
         for(String otherMove : otherMoves) {
             Move om = moveParser.getMove(otherMove);
-            apply(om);
+            apply(getMove(otherMove));
         }
         
         return status;
