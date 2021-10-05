@@ -71,19 +71,13 @@ public class Position {
 
         Color oppositeColor = colorToMove.opposite();
         King king = null;
-        Map<Coordinate, Moveable> oppositeColorPieces = new HashMap<>();
         for(Entry<Coordinate, Moveable> entry : moveables.entrySet()) {
-            Coordinate location = entry.getKey();
             Moveable moveable = entry.getValue();
-            if(moveable.getColor()==oppositeColor) { oppositeColorPieces.put(location, moveable); }
-            else if(moveable instanceof King) {
+            if(moveable.getColor()==colorToMove && moveable instanceof King) {
                 if(king!=null) { throw new IllegalStateException("Multiple "+colorToMove+" king in position"); }
                 king = (King)moveable;
             }
         }
-
-        if(king==null) { throw new IllegalStateException("No "+colorToMove+" king in position"); }
-        if(oppositeColorPieces.isEmpty()) { throw new IllegalStateException("No "+oppositeColor+" piece"); }
 
         List<Move> legalMoves = new ArrayList<>(42);
         for(Entry<Coordinate, Moveable> entry : moveables.entrySet()) {
@@ -93,16 +87,20 @@ public class Position {
             Coordinate location = entry.getKey();
             DisplacementRule<Moveable> rule = ruleManager.getDisplacementRule(moveable);
             List<Move> allMoves = rule.getAvailableMoves(this, location, moveable);
-            for(Move move : allMoves) {
-                if(move.isPromotionNeeded()) { move.setPromotion(new Queen(colorToMove)); }
-                
-                Position checkPosition = apply(move);
-                Coordinate kingLocation = checkPosition.getLocation(king);
-                if(!checkPosition.canBeReached(kingLocation, oppositeColor)) {
-                    legalMoves.add(move);
-                }
+            if(king!=null) {
+                for(Move move : allMoves) {
+                    if(move.isPromotionNeeded()) { move.setPromotion(new Queen(colorToMove)); }
 
-                move.setPromotion(null);
+                    Position checkPosition = apply(move);
+                    Coordinate kingLocation = checkPosition.getLocation(king);
+                    if(!checkPosition.canBeReached(kingLocation, oppositeColor)) {
+                        legalMoves.add(move);
+                    }
+
+                    move.setPromotion(null);
+                }
+            } else {
+                legalMoves.addAll(allMoves);
             }
         }
 

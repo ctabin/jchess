@@ -109,9 +109,7 @@ position.put("e5", new Rook(Color.BLACK));
 
 ### Start from a custom position
 
-In some cases, one may want to set a custom position to start. In order to use
-the `JChessGame` instance, it is mandatory to have at least the two kings in
-the position before retrieving the available moves.
+In some cases, one may want to set a custom position to start.
 
 ```java
 JChessGame game = JChessGame.newEmptyGame(Color.WHITE);
@@ -120,6 +118,9 @@ game.put("h8", new King(Color.BLACK));
 ```
 
 The example below creates a new game with only the two kings and White to move.
+
+It is possible to put some position without any king on the board. If there is no
+king, then the status of the game will remain `Status.NOT_FINISHED`.
 
 ### Position's legal moves
 
