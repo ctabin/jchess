@@ -9,6 +9,21 @@ public class Coordinate {
     private int column;
 
     /**
+     * Creates a new {@code Coordinate} with the algebraic notation.
+     *
+     * @param algebraicCoordinate The algebraic notation (eg 'e5').
+     */
+    public Coordinate(String algebraicCoordinate) {
+        if(algebraicCoordinate.length()!=2) { throw new IllegalArgumentException("Invalid algebraic value: "+algebraicCoordinate); }
+
+        char colChar = algebraicCoordinate.charAt(0);
+        this.column = colChar-'a';
+
+        char rowChar = algebraicCoordinate.charAt(1);
+        this.row = rowChar-'1';
+    }
+
+    /**
      * Creates a new {@code Coordinate}.
      *
      * @param row The row index (zero-based).
@@ -43,6 +58,16 @@ public class Coordinate {
      */
     public Coordinate to(int rowIncr, int columnIncr) {
         return new Coordinate(row+rowIncr, column+columnIncr);
+    }
+
+    /**
+     * Returns the algebraic notation of this {@code Coordinate}.
+     */
+    @Override
+    public String toString() {
+        char colChar = (char)('a'+column);
+        char rowChar = (char)('1'+row);
+        return colChar+""+rowChar;
     }
 
     @Override

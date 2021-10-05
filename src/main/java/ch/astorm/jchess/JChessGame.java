@@ -191,6 +191,19 @@ public class JChessGame {
     }
 
     /**
+     * Returns the available legal moves for the entity at the given {@code algebraicCoordinate}.
+     * If there is no entity at this location, null will be returned.
+     *
+     * @param algebraicCoordinate The location (eg 'e5').
+     * @return The list of legal moves or null if there is no entity at this location.
+     */
+    public List<Move> getAvailableMoves(String algebraicCoordinate) {
+        Moveable movable = position.get(algebraicCoordinate);
+        if(movable==null) { return null; }
+        return getAvailableMoves(movable);
+    }
+
+    /**
      * Applies the given {@code move} to the position and updates the game status.
      *
      * @param move The move to apply.
@@ -239,5 +252,27 @@ public class JChessGame {
      */
     public void resign(Color resignedColor) {
         status = resignedColor==Color.WHITE ? Status.WIN_BLACK : Status.WIN_WHITE;
+    }
+
+    /**
+     * Returns the {@link Moveable} entity at the specified {@code algebraicCoordinate}.
+     *
+     * @param algebraicCoordinate The coordinate (eg 'e5').
+     * @return The {@link Moveable} entity or null if there is none.
+     */
+    public Moveable get(String algebraicCoordinate) {
+        return position.get(algebraicCoordinate);
+    }
+
+    /**
+     * Puts the given {@code moveable} entity at the specified {@code algebraicCoordinate}.
+     * If there was already an entity at this location, the latter is returned.
+     *
+     * @param algebraicCoordinate The coordinate (eg 'e5').
+     * @param moveable The entity.
+     * @return The previous entity or null if there was none.
+     */
+    public Moveable put(String algebraicCoordinate, Moveable moveable) {
+        return position.put(algebraicCoordinate, moveable);
     }
 }

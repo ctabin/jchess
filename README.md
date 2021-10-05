@@ -11,8 +11,10 @@ Simple Java Chess game API.
 The goal is to provide as simple, easy-to-use API to manipulate chess games in Java.
 It is also easy to extend in order to create extended chess rules, new pieces and so on.
 
-This API does NOT provide any chess engine for position analysis. However, this API could
+This project does **NOT** provide any chess engine for position analysis. However, it could
 be very easily used by an engine to do such task.
+
+This API is compiled with the JDK 11.
 
 The main features of this API are:
 - Standard chess rules
@@ -80,6 +82,29 @@ JChessGame game = JChessGame.newGame();
 Once the game is created, it has already the standard chess rules and the initial
 position built in. Hence, the game is ready and White have the move.
 
+### Query the position
+
+The current `Position` of a game can be explored with various methods.
+
+```
+Position position = game.getPosition();
+
+//get the positions of all the moveable entities in the position
+Map<Coordinate, Moveable> moveables = position.getMoveables();
+
+//get all the white entities in the position
+List<Moveable> whiteMoveables = position.getMoveables(Color.WHITE);
+
+//find the location of the white's king
+Coordinate kingLocation = position.findLocation(King.class, Color.WHITE);
+
+//get the moveable entity in b1
+Moveable moveableAtLocation = position.get("b1");
+
+//set the moveable entity in e5
+position.put("e5", new Rook(Color.BLACK));
+```
+
 ### Start from a custom position
 
 In some cases, one may want to starts from a custom position. In order to use
@@ -88,8 +113,8 @@ the position before retrieving the available moves.
 
 ```java
 JChessGame game = JChessGame.newEmptyGame(Color.WHITE);
-game.getPosition().put(0, 0, new King(Color.WHITE));
-game.getPosition().put(7, 7, new King(Color.BLACK));
+game.put("a1", new King(Color.WHITE));
+game.put("h8", new King(Color.BLACK));
 ```
 
 The example below creates a new game with only the two kings and White to move.
@@ -101,6 +126,12 @@ that has the move:
 
 ```java
 List<Move> legalMoves = game.getAvailableMoves();
+```
+
+If the position is known, the API allows to get the legal moves from a given location:
+
+```java
+List<Move> legalMoves = game.getAvailableMoves("c3");
 ```
 
 It is also possible to retrieves the legal moves for a given entity:
@@ -169,7 +200,7 @@ try(PGNReader pgnReader = new PGNReader(/* reader */) {
 }
 ```
 
-Note: the PGN format used `ISO-8859-1` encoding.
+Note: the PGN format uses `ISO-8859-1` encoding.
 
 ### Export games to PGN files
 
@@ -225,4 +256,13 @@ The result will look like below:
 1 | R | N | B | Q | K | B | N | R |
   |---|---|---|---|---|---|---|---|
     a   b   c   d   e   f   g   h  
+```
+
+## Compilation
+
+The standard maven command applies. However, since the tests are time-consuming, it is
+recommanded to skip them.
+
+```
+mvn clean package -DskipTests
 ```
