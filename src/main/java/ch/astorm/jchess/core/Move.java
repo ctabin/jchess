@@ -2,6 +2,7 @@
 package ch.astorm.jchess.core;
 
 import ch.astorm.jchess.core.rules.Displacement;
+import ch.astorm.jchess.io.MoveParser;
 import java.util.List;
 
 /**
@@ -151,5 +152,13 @@ public class Move {
         }
 
         afterMove = position;
+    }
+
+    /**
+     * Returns this {@code Move} in algebraic notation.
+     * @see MoveParser#getMoveString(ch.astorm.jchess.core.Move)
+     */
+    public String toString() {
+        return MoveParser.getMoveString(this);
     }
 }
