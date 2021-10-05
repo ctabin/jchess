@@ -32,20 +32,6 @@ public class PositionRenderer {
     }};
 
     /**
-     * Mapping for the column letters.
-     */
-    public static final Map<Integer, String> COLUMN_LETTERS = new HashMap<>(){{
-        put(0, "a");
-        put(1, "b");
-        put(2, "c");
-        put(3, "d");
-        put(4, "e");
-        put(5, "f");
-        put(6, "g");
-        put(7, "h");
-    }};
-
-    /**
      * Renders the given {@code position} in a String.
      * Here is a result example:
      * <pre>
@@ -105,7 +91,7 @@ public class PositionRenderer {
                 for(int k=0 ; k<8 ; ++k) {
                     if(k==0) { builder.append("   "); }
                     
-                    String str = COLUMN_LETTERS.get(k);
+                    String str = ""+(char)('a'+k);
                     builder.append(" ").append(str).append(" ");
                     builder.append(" ");
                 }

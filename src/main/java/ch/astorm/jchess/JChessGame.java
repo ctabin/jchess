@@ -13,6 +13,7 @@ import ch.astorm.jchess.core.entities.Pawn;
 import ch.astorm.jchess.core.entities.Queen;
 import ch.astorm.jchess.core.entities.Rook;
 import ch.astorm.jchess.core.rules.RuleManager;
+import ch.astorm.jchess.io.MoveParser;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ public class JChessGame {
     private Position position;
     private Status status;
     private Map<String, String> metadata;
+    private MoveParser moveParser;
 
     /**
      * Final status of the game.
@@ -92,6 +94,7 @@ public class JChessGame {
         this.position = initPosition;
         this.status = status;
         this.metadata = new HashMap<>();
+        this.moveParser = new MoveParser(this);
     }
 
     /**
@@ -154,6 +157,13 @@ public class JChessGame {
     }
 
     /**
+     * Returns the underlying {@link MoveParser}.
+     */
+    public MoveParser getMoveParser() {
+        return moveParser;
+    }
+
+    /**
      * Returns the rule manager.
      */
     public RuleManager getRuleManager() {
@@ -204,13 +214,45 @@ public class JChessGame {
     }
 
     /**
+     * Executes the specified {@code move}.
+     *
+     * @param move The move.
+     * @return The game status after the move.
+     */
+    public Status doMove(Move move) {
+        if(!status.isPlayAllowed()) { throw new IllegalStateException("Game is "+status); }
+        return apply(move);
+    }
+
+    /**
+     * Do the move specified by the {@code algebraicNotation} for the current color
+     * on move.
+     *
+     * @param algebraicNotation The (first) move (eg 'Nxb5').
+     * @param otherMoves The other move to play (by alternating colors) in algebraic notation.
+     * @return The game status after the move.
+     */
+    public Status doMove(String algebraicNotation, String... otherMoves) {
+        if(!status.isPlayAllowed()) { throw new IllegalStateException("Game is "+status); }
+
+        Move move = moveParser.getMove(algebraicNotation);
+        apply(move);
+
+        for(String otherMove : otherMoves) {
+            Move om = moveParser.getMove(otherMove);
+            apply(om);
+        }
+        
+        return status;
+    }
+
+    /**
      * Applies the given {@code move} to the position and updates the game status.
      *
      * @param move The move to apply.
      * @return The new game status.
      */
-    public Status apply(Move move) {
-        if(!status.isPlayAllowed()) { throw new IllegalStateException("status is "+status); }
+    protected Status apply(Move move) {
         position = position.apply(move);
         status = ruleManager.getEndgameStatus(position);
         return status;

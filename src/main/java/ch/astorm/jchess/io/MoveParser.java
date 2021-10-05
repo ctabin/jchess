@@ -88,36 +88,12 @@ public class MoveParser {
     }
 
     /**
-     * Do all the specified {@code moves} in the {@link JChessGame}.
-     *
-     * @param moves The moves to apply.
-     * @return The status after the last move.
-     */
-    public Status doMoves(Collection<String> moves) {
-        moves.forEach(m -> doMove(m));
-        return game.getStatus();
-    }
-
-    /**
-     * Do the move in the underlying {@link JChessGame}.
-     *
-     * @param moveStr The algebraic chess notation move.
-     * @return The new game status.
-     */
-    public Status doMove(String moveStr) {
-        Move move = getMove(moveStr);
-        return game.apply(move);
-    }
-
-    /**
      * Returns the corresponding {@code str} move in the {@link JChessGame}.
      *
      * @param moveStr The algebraic chess notation move (such as 'e4' or 'Kb3').
      * @return The move or null if invalid.
      */
     public Move getMove(String moveStr) {
-        if(!game.getStatus().isPlayAllowed()) { throw new IllegalStateException("Game is "+game.getStatus()); }
-
         Move move = getMoveWithoutPromotion(moveStr);
         int equals = moveStr.indexOf(PROMOTION_SEPARATOR);
         if(equals<0) { return move; }

@@ -25,11 +25,13 @@ public class PGNReader extends BufferedReader {
     public static class PGNReaderException extends RuntimeException {
         private JChessGame game;
         private List<String> moves;
+        private String moveFailure;
 
-        public PGNReaderException(Throwable cause, JChessGame game, List<String> moves) {
+        public PGNReaderException(Throwable cause, JChessGame game, List<String> moves, String moveFailure) {
             super(cause);
             this.game = game;
             this.moves = moves;
+            this.moveFailure = moveFailure;
         }
 
         /**
@@ -44,6 +46,13 @@ public class PGNReader extends BufferedReader {
          */
         public List<String> getMoves() {
             return moves;
+        }
+
+        /**
+         * Returns the move that failed.
+         */
+        public String getFailedMove() {
+            return moveFailure;
         }
     }
 
@@ -69,10 +78,11 @@ public class PGNReader extends BufferedReader {
 
         JChessGame game = JChessGame.newGame();
         game.getMetadata().putAll(metadata);
-        MoveParser moveParser = new MoveParser(game);
 
-        try { moveParser.doMoves(parsedMoves); }
-        catch(Exception e) { throw new PGNReaderException(e, game, parsedMoves); }
+        for(String move : parsedMoves) {
+            try { game.doMove(move); }
+            catch(Exception e) { throw new PGNReaderException(e, game, parsedMoves, move); }
+        }
 
         if(moves.endsWith("1-0")) { game.resign(Color.BLACK); }
         else if(moves.endsWith("0-1")) { game.resign(Color.WHITE); }

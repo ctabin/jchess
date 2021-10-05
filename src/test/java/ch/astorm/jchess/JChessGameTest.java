@@ -41,6 +41,11 @@ public class JChessGameTest {
 
         assertNull(game.getAvailableMoves("e5"));
         assertTrue(game.getAvailableMoves("e1").isEmpty());
+
+        game.doMove(game.getAvailableMoves("e2").get(0));
+        game.resign(Color.WHITE);
+
+        assertThrows(IllegalStateException.class, () -> game.doMove(null));
     }
 
     @Test
@@ -52,8 +57,7 @@ public class JChessGameTest {
 
         assertEquals(false, game.back());
 
-        MoveParser parser = new MoveParser(game);
-        assertEquals(JChessGame.Status.DRAW, parser.doMove("Ka2"));
+        assertEquals(JChessGame.Status.DRAW, game.doMove("Ka2"));
         assertTrue(game.getStatus().isFinished());
     }
 
@@ -64,9 +68,7 @@ public class JChessGameTest {
             game.put("a1", new King(Color.WHITE));
             game.put("h8", new King(Color.BLACK));
             game.put("g7", new Bishop(Color.BLACK));
-
-            MoveParser parser = new MoveParser(game);
-            assertEquals(JChessGame.Status.DRAW, parser.doMove("Ka2"));
+            assertEquals(JChessGame.Status.DRAW, game.doMove("Ka2"));
         }
 
         {
@@ -74,9 +76,7 @@ public class JChessGameTest {
             game.put("a1", new King(Color.BLACK));
             game.put("h8", new King(Color.WHITE));
             game.put("g7", new Bishop(Color.WHITE));
-
-            MoveParser parser = new MoveParser(game);
-            assertEquals(JChessGame.Status.DRAW, parser.doMove("Kg8"));
+            assertEquals(JChessGame.Status.DRAW, game.doMove("Kg8"));
         }
     }
 
@@ -87,9 +87,7 @@ public class JChessGameTest {
             game.put("a1", new King(Color.WHITE));
             game.put("h8", new King(Color.BLACK));
             game.put("g7", new Knight(Color.BLACK));
-
-            MoveParser parser = new MoveParser(game);
-            assertEquals(JChessGame.Status.DRAW, parser.doMove("Ka2"));
+            assertEquals(JChessGame.Status.DRAW, game.doMove("Ka2"));
         }
 
         {
@@ -97,9 +95,7 @@ public class JChessGameTest {
             game.put("a1", new King(Color.BLACK));
             game.put("h8", new King(Color.WHITE));
             game.put("g7", new Knight(Color.WHITE));
-
-            MoveParser parser = new MoveParser(game);
-            assertEquals(JChessGame.Status.DRAW, parser.doMove("Kg8"));
+            assertEquals(JChessGame.Status.DRAW, game.doMove("Kg8"));
         }
     }
 
@@ -110,9 +106,7 @@ public class JChessGameTest {
             game.put("a1", new King(Color.WHITE));
             game.put("h8", new King(Color.BLACK));
             game.put("g7", new Rook(Color.BLACK));
-
-            MoveParser parser = new MoveParser(game);
-            assertEquals(JChessGame.Status.NOT_FINISHED, parser.doMove("Ka2"));
+            assertEquals(JChessGame.Status.NOT_FINISHED, game.doMove("Ka2"));
         }
 
         {
@@ -120,9 +114,7 @@ public class JChessGameTest {
             game.put("a1", new King(Color.BLACK));
             game.put("h8", new King(Color.WHITE));
             game.put("g7", new Rook(Color.WHITE));
-
-            MoveParser parser = new MoveParser(game);
-            assertEquals(JChessGame.Status.NOT_FINISHED, parser.doMove("Kg8"));
+            assertEquals(JChessGame.Status.NOT_FINISHED, game.doMove("Kg8"));
         }
     }
 
@@ -158,12 +150,11 @@ public class JChessGameTest {
         game.put("h8", new King(Color.BLACK));
         game.put("g7", new Rook(Color.BLACK));
 
-        MoveParser parser = new MoveParser(game);
         while(game.getStatus()==Status.NOT_FINISHED) {
-            parser.doMove("Ka2");
-            parser.doMove("Kg8");
-            parser.doMove("Ka1");
-            parser.doMove("Kh8");
+            game.doMove("Ka2");
+            game.doMove("Kg8");
+            game.doMove("Ka1");
+            game.doMove("Kh8");
         }
 
         assertEquals(Status.DRAW_REPETITION, game.getStatus());
@@ -176,8 +167,7 @@ public class JChessGameTest {
         game.put("b1", new Queen(Color.WHITE));
         game.put("h8", new King(Color.BLACK));
 
-        MoveParser parser = new MoveParser(game);
-        assertEquals(Status.DRAW_STALEMATE, parser.doMove("Qg6"));
-        assertThrows(IllegalStateException.class, () -> parser.doMove("Qg5"));
+        assertEquals(Status.DRAW_STALEMATE, game.doMove("Qg6"));
+        assertThrows(IllegalStateException.class, () -> game.doMove("Qg5"));
     }
 }
