@@ -8,7 +8,7 @@ Simple Java Chess game API.
 
 ## About this project
 
-The goal is to provide as simple, easy-to-use API to manipulate chess games in Java.
+The goal is to provide a simple, easy-to-use API to manipulate chess games in Java.
 It is also easy to extend in order to create extended chess rules, new pieces and so on.
 
 This project does **NOT** provide any chess engine for position analysis. However, it could
@@ -107,7 +107,7 @@ position.put("e5", new Rook(Color.BLACK));
 
 ### Start from a custom position
 
-In some cases, one may want to starts from a custom position. In order to use
+In some cases, one may want to set a custom position to start. In order to use
 the `JChessGame` instance, it is mandatory to have at least the two kings in
 the position before retrieving the available moves.
 
@@ -121,7 +121,7 @@ The example below creates a new game with only the two kings and White to move.
 
 ### Position's legal moves
 
-It is very easy to retrieves all the legal move in a position for the color
+It is very easy to retrieves all the legal moves in a position for the color
 that has the move:
 
 ```java
