@@ -7,7 +7,6 @@ import ch.astorm.jchess.core.Color;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.Test;
@@ -16,9 +15,8 @@ public class PGNWriterTest {
     @Test
     public void testSimpleGame() {
         JChessGame game = JChessGame.newGame();
-        MoveParser parser = new MoveParser(game);
 
-        parser.doMoves(Arrays.asList("e4","e5","Nf3","Nc6","Bb5"));
+        game.doMove("e4","e5","Nf3","Nc6","Bb5");
         game.draw();
 
         StringWriter sw = new StringWriter();
@@ -38,9 +36,8 @@ public class PGNWriterTest {
     @Test
     public void testUnfinishedGame() throws Exception {
         JChessGame game = JChessGame.newGame();
-        MoveParser parser = new MoveParser(game);
 
-        parser.doMoves(Arrays.asList("e4","e5"));
+        game.doMove("e4","e5");
 
         StringWriter sw = new StringWriter();
         try(PGNWriter writer = new PGNWriter(sw)) { writer.writeGame(game); }
@@ -63,22 +60,19 @@ public class PGNWriterTest {
     public void testMultipleGames() throws IOException {
         JChessGame game1 = JChessGame.newGame();
         {
-            MoveParser parser = new MoveParser(game1);
-            parser.doMoves(Arrays.asList("e4","e5","Nf3","Nc6","Bb5"));
+            game1.doMove("e4","e5","Nf3","Nc6","Bb5");
             game1.draw();
         }
 
         JChessGame game2 = JChessGame.newGame();
         {
-            MoveParser parser = new MoveParser(game2);
-            parser.doMoves(Arrays.asList("e4","e5","Nf3","Nc6"));
+            game2.doMove("e4","e5","Nf3","Nc6");
             game2.resign(Color.WHITE);
         }
 
         JChessGame game3 = JChessGame.newGame();
         {
-            MoveParser parser = new MoveParser(game3);
-            parser.doMoves(Arrays.asList("e4","e5","Nf3","Nc6"));
+            game3.doMove("e4","e5","Nf3","Nc6");
             game3.resign(Color.BLACK);
         }
 

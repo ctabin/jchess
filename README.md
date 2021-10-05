@@ -17,6 +17,7 @@ be very easily used by an engine to do such task.
 This API is compiled with the JDK 11.
 
 The main features of this API are:
+- Ease of use
 - Standard chess rules
 - Custom positions
 - PGN import
@@ -43,25 +44,22 @@ A standard chess game can be very easily created:
 //new chess game with standard board and rules
 JChessGame game = JChessGame.newGame();
 
-//parser to easily make moves by using algebraic notation
-MoveParser parser = new MoveParser(game);
-
 //apply the move to the game
-parser.doMove("e4");
+game.doMove("e4");
 
 //cancel the previous move
 game.back();
 
-//moves can be grouped in a list
-parser.doMoves(Arrays.asList("e4","e5","Nf3","Nc6","Bb5","a6","Ba4","Nf6","O-O","Be7",
-                             "Re1","b5","Bb3","d6","c3","O-O","h3","Nb8","d4","Nbd7",
-                             "c4","c6","cxb5","axb5","Nc3","Bb7","Bg5","b4","Nb1","h6",
-                             "Bh4","c5","dxe5","Nxe4","Bxe7","Qxe7","exd6","Qf6","Nbd2","Nxd6",
-                             "Nc4","Nxc4","Bxc4","Nb6","Ne5","Rae8","Bxf7+","Rxf7","Nxf7","Rxe1+",
-                             "Qxe1","Kxf7","Qe3","Qg5","Qxg5","hxg5","b3","Ke6","a3","Kd6",
-                             "axb4","cxb4","Ra5","Nd5","f3","Bc8","Kf2","Bf5","Ra7","g6",
-                             "Ra6+","Kc5","Ke1","Nf4","g3","Nxh3","Kd2","Kb5","Rd6","Kc5",
-                             "Ra6","Nf2","g4","Bd3","Re6"));
+//moves can be played altogether
+game.doMove("e4","e5","Nf3","Nc6","Bb5","a6","Ba4","Nf6","O-O","Be7",
+            "Re1","b5","Bb3","d6","c3","O-O","h3","Nb8","d4","Nbd7",
+            "c4","c6","cxb5","axb5","Nc3","Bb7","Bg5","b4","Nb1","h6",
+            "Bh4","c5","dxe5","Nxe4","Bxe7","Qxe7","exd6","Qf6","Nbd2","Nxd6",
+            "Nc4","Nxc4","Bxc4","Nb6","Ne5","Rae8","Bxf7+","Rxf7","Nxf7","Rxe1+",
+            "Qxe1","Kxf7","Qe3","Qg5","Qxg5","hxg5","b3","Ke6","a3","Kd6",
+            "axb4","cxb4","Ra5","Nd5","f3","Bc8","Kf2","Bf5","Ra7","g6",
+            "Ra6+","Kc5","Ke1","Nf4","g3","Nxh3","Kd2","Kb5","Rd6","Kc5",
+            "Ra6","Nf2","g4","Bd3","Re6");
 
 //agree to a draw
 game.draw();
@@ -70,6 +68,9 @@ game.draw();
 ## Usage
 
 Here are some usages about specific parts of the API.
+
+The main entry point is the [JChessGame](src/main/java/ch/astorm/jchess/JChessGame.java) class
+that will handle the global game.
 
 ### Game initialization
 
@@ -84,7 +85,8 @@ position built in. Hence, the game is ready and White have the move.
 
 ### Query the position
 
-The current `Position` of a game can be explored with various methods.
+The current [Position](src/main/java/ch/astorm/jchess/core/Position.java) of a game can be explored
+with various methods.
 
 ```
 Position position = game.getPosition();
@@ -145,16 +147,17 @@ List<Move> kingMoves = game.getAvailableMoves(king);
 
 ### Play moves
 
-To play the moves in the game, it is recommanded to use the `MoveParser` interface, since
-it is much more readable than using board indexes. This allows to use the [algebraic notation](https://en.wikipedia.org/wiki/Algebraic_notation_(chess))
+To play the moves in the game, it is recommanded to use directly the `JChessGame` because
+they read the [algebraic notation](https://en.wikipedia.org/wiki/Algebraic_notation_(chess))
 to update the position.
 
 ```java
 JChessGame game = JChessGame.newGame();
-MoveParser parser = new MoveParser(game);
+game.doMove("e4"); //white plays e4
+game.doMove("e5"); //black plays e5
 
-parser.doMoves(Arrays.asList("e4","e5"));
-parser.doMoves(Arrays.asList("Nc3","e6"));
+//moves can be grouped together and they will be played in alternance
+game.doMove("Nc3","e6");
 ```
 
 Each move will update the current position and automatically switch the `Color` being on the move.
@@ -257,6 +260,14 @@ The result will look like below:
   |---|---|---|---|---|---|---|---|
     a   b   c   d   e   f   g   h  
 ```
+
+Here are some details:
+- All uppercase letters are white pieces.
+- All lowercase letters are black pieces.
+- White pawns are noted as `î` to indicate they are aiming up the board.
+- Black pawns are noted as `!` to indicate they are aiming down the board.
+
+The rendering can be customized in the [PositionRender](src/main/java/ch/astorm/jchess/util/PositionRenderer.java) class.
 
 ## Compilation
 
