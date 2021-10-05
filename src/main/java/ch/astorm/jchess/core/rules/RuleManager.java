@@ -71,7 +71,7 @@ public class RuleManager {
      * @return The status.
      */
     public Status getEndgameStatus(Position position) {
-        Color color = position.getColorToMove();
+        Color color = position.getColorOnMove();
         List<Move> availableLegalMoves = position.getLegalMoves();
         if(availableLegalMoves.isEmpty()) {
             Coordinate king = position.findLocation(King.class, color);

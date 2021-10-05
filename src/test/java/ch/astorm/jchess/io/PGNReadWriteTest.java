@@ -52,7 +52,7 @@ public class PGNReadWriteTest {
             System.out.println(" complete.");
         } catch(PGNReaderException pe) {
             System.err.println();
-            System.err.println("Failure of game "+counter+" in "+resource);
+            System.err.println("Failure of game "+counter+" for "+pe.getFailedMove()+" in "+resource);
             System.err.println("------------------------------------------");
             System.err.println("Game metadata:");
             pe.getGame().getMetadata().forEach((k,v) -> System.out.println("- "+k+": "+v));

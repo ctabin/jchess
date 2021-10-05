@@ -122,6 +122,8 @@ The example below creates a new game with only the two kings and White to move.
 It is possible to put some position without any king on the board. If there is no
 king, then the status of the game will remain `Status.NOT_FINISHED`.
 
+Note that it is not possible to put multiple kings of the same color on the board.
+
 ### Position's legal moves
 
 It is very easy to retrieves all the legal moves in a position for the color
@@ -144,6 +146,19 @@ Position position = game.getPosition();
 Coordinate kingCoordinate = position.findLocation(King.class, Color.WHITE);
 Moveable king = position.get(kingCoordinate);
 List<Move> kingMoves = game.getAvailableMoves(king);
+```
+
+### Color on move
+
+The method `getColorOnMove()` can be used to know which color has the move. It is also possible
+to change the current color on move:
+
+```java
+JChessGame game = JChessGame.newGame();
+game.switchColorOnMove();
+
+//black has the move
+game.doMove("e5");
 ```
 
 ### Play moves
