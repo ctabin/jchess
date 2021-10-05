@@ -92,6 +92,7 @@ public class PGNReaderTest {
         } catch(PGNReaderException pe) {
             assertNotNull(pe.getGame());
             assertEquals(3, pe.getMoves().size());
+            assertEquals("d5", pe.getFailedMove());
         }
     }
 

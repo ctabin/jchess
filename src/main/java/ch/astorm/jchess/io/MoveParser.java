@@ -115,7 +115,7 @@ public class MoveParser {
     }
 
     private Move getMoveWithoutPromotion(String moveStr) {
-        Color colorToMove = game.getColorToMove();
+        Color colorToMove = game.getColorOnMove();
         List<Move> availableMoves = game.getAvailableMoves();
         if(moveStr.startsWith(SMALL_CASTLING) || moveStr.startsWith(BIG_CASTLING)) {
             String cleanedMove = moveStr.replace(""+CHECK, "");

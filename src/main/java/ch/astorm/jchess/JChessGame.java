@@ -277,8 +277,16 @@ public class JChessGame {
     /**
      * Returns the {@link Color} that has the move.
      */
-    public Color getColorToMove() {
-        return position.getColorToMove();
+    public Color getColorOnMove() {
+        return position.getColorOnMove();
+    }
+
+    /**
+     * Switches the {@link Color} that has the move and returns the new one having
+     * the move.
+     */
+    public Color switchColorOnMove() {
+        return position.switchColorOnMove();
     }
 
     /**

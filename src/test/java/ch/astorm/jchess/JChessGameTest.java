@@ -12,7 +12,6 @@ import ch.astorm.jchess.core.entities.Knight;
 import ch.astorm.jchess.core.entities.Queen;
 import ch.astorm.jchess.core.entities.Rook;
 import ch.astorm.jchess.core.rules.RuleManager;
-import ch.astorm.jchess.io.MoveParser;
 import ch.astorm.jchess.util.PositionRenderer;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,6 +23,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 public class JChessGameTest {
+    @Test
+    public void testInternalObjectAccess() {
+        JChessGame game = JChessGame.newGame();
+        assertNotNull(game.getMetadata());
+        assertNotNull(game.getMoveParser());
+        assertNotNull(game.getPosition());
+        assertNotNull(game.getRuleManager());
+    }
+
     @Test
     public void testInitialPosition() {
         JChessGame game = JChessGame.newGame();
@@ -46,6 +54,13 @@ public class JChessGameTest {
         game.resign(Color.WHITE);
 
         assertThrows(IllegalStateException.class, () -> game.doMove(null));
+    }
+
+    @Test
+    public void testStartPositionInversed() {
+        JChessGame game = JChessGame.newGame();
+        assertEquals(Color.BLACK, game.switchColorOnMove());
+        game.doMove("e5", "e4");
     }
 
     @Test

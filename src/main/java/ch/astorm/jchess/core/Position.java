@@ -22,10 +22,10 @@ import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 public class Position {
     private final Board board;
     private final RuleManager ruleManager;
-    private final Color colorToMove;
     private final BidiMap<Coordinate, Moveable> moveables;
     private final Map<Moveable, MoveableProperties> moveableProperties;
     private final List<Move> moveHistory;
+    private Color colorOnMove;
     private List<Move> availableLegalMoves;
     private Position previousPosition;
 
@@ -38,12 +38,12 @@ public class Position {
      *
      * @param board The {@link Board}.
      * @param ruleManager The {@link RuleManager}.
-     * @param colorToMove The color to move.
+     * @param colorOnMove The color to move.
      */
-    public Position(Board board, RuleManager ruleManager, Color colorToMove) {
+    public Position(Board board, RuleManager ruleManager, Color colorOnMove) {
         this.board = board;
         this.ruleManager = ruleManager;
-        this.colorToMove = colorToMove;
+        this.colorOnMove = colorOnMove;
         this.moveables = new DualHashBidiMap<>();
         this.moveableProperties = new HashMap<>();
         this.moveHistory = new ArrayList<>(128);
@@ -59,8 +59,18 @@ public class Position {
     /**
      * Returns the {@link Color} that have the move.
      */
-    public Color getColorToMove() {
-        return colorToMove;
+    public Color getColorOnMove() {
+        return colorOnMove;
+    }
+
+    /**
+     * Switches the {@link Color} that have the move and returns the new one that
+     * have the move.
+     */
+    public Color switchColorOnMove() {
+        clearCache();
+        colorOnMove = colorOnMove.opposite();
+        return colorOnMove;
     }
 
     /**
@@ -69,12 +79,12 @@ public class Position {
     private void computeLegalMoves() {
         if(availableLegalMoves!=null) { return; }
 
-        Color oppositeColor = colorToMove.opposite();
+        Color oppositeColor = colorOnMove.opposite();
         King king = null;
         for(Entry<Coordinate, Moveable> entry : moveables.entrySet()) {
             Moveable moveable = entry.getValue();
-            if(moveable.getColor()==colorToMove && moveable instanceof King) {
-                if(king!=null) { throw new IllegalStateException("Multiple "+colorToMove+" king in position"); }
+            if(moveable.getColor()==colorOnMove && moveable instanceof King) {
+                if(king!=null) { throw new IllegalStateException("Multiple "+colorOnMove+" king in position"); }
                 king = (King)moveable;
             }
         }
@@ -82,14 +92,14 @@ public class Position {
         List<Move> legalMoves = new ArrayList<>(42);
         for(Entry<Coordinate, Moveable> entry : moveables.entrySet()) {
             Moveable moveable = entry.getValue();
-            if(moveable.getColor()!=colorToMove) { continue; }
+            if(moveable.getColor()!=colorOnMove) { continue; }
 
             Coordinate location = entry.getKey();
             DisplacementRule<Moveable> rule = ruleManager.getDisplacementRule(moveable);
             List<Move> allMoves = rule.getAvailableMoves(this, location, moveable);
             if(king!=null) {
                 for(Move move : allMoves) {
-                    if(move.isPromotionNeeded()) { move.setPromotion(new Queen(colorToMove)); }
+                    if(move.isPromotionNeeded()) { move.setPromotion(new Queen(colorOnMove)); }
 
                     Position checkPosition = apply(move);
                     Coordinate kingLocation = checkPosition.getLocation(king);
@@ -145,7 +155,7 @@ public class Position {
      * @see Move#apply(ch.astorm.jchess.core.Position)
      */
     public Position apply(Move move) {
-        Position p = new Position(board, ruleManager, colorToMove.opposite());
+        Position p = new Position(board, ruleManager, colorOnMove.opposite());
         p.moveables.putAll(moveables);
         p.moveHistory.addAll(moveHistory);
         p.previousPosition = this;
