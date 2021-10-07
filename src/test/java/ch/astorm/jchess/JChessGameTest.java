@@ -12,7 +12,7 @@ import ch.astorm.jchess.core.entities.Knight;
 import ch.astorm.jchess.core.entities.Queen;
 import ch.astorm.jchess.core.entities.Rook;
 import ch.astorm.jchess.core.rules.RuleManager;
-import ch.astorm.jchess.util.PositionRenderer;
+import ch.astorm.jchess.util.ASCIIPositionRenderer;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -43,9 +43,6 @@ public class JChessGameTest {
         Coordinate kingLocation = game.getPosition().findLocation(King.class, Color.WHITE);
         Moveable king = game.getPosition().get(kingLocation);
         assertEquals(0, game.getAvailableMoves(king).size());
-
-        String str = PositionRenderer.render(game.getPosition());
-        assertEquals(648, str.length());
 
         assertNull(game.getAvailableMoves("e5"));
         assertTrue(game.getAvailableMoves("e1").isEmpty());
