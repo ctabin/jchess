@@ -4,7 +4,7 @@ package ch.astorm.jchess.io;
 import ch.astorm.jchess.JChessGame;
 import ch.astorm.jchess.JChessGame.Status;
 import ch.astorm.jchess.io.PGNReader.PGNReaderException;
-import ch.astorm.jchess.util.PositionRenderer;
+import ch.astorm.jchess.util.ASCIIPositionRenderer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -58,7 +58,7 @@ public class PGNReadWriteTest {
             pe.getGame().getMetadata().forEach((k,v) -> System.out.println("- "+k+": "+v));
             System.err.println("------------------------------------------");
             System.err.println("Position before the move:\n");
-            System.err.println(PositionRenderer.render(pe.getGame().getPosition()));
+            ASCIIPositionRenderer.render(System.err, pe.getGame().getPosition());
             System.err.println("==========================================");
             fail("Unable to parse PGN game", pe);
         }
@@ -71,11 +71,7 @@ public class PGNReadWriteTest {
         JChessGame parsed2;
         try(PGNReader reader = new PGNReader(new StringReader(sw.toString()))) { parsed2 = reader.readGame(); }
 
-        String expected = PositionRenderer.render(parsed.getPosition());
-        String having = PositionRenderer.render(parsed2.getPosition());
-
-        assertEquals(expected, having);
-        assertTrue(parsed.getPosition().equals(parsed2.getPosition()), "Resulting positions are not the same:\n"+expected+"\n\n"+having);
+        assertTrue(parsed.getPosition().equals(parsed2.getPosition()), "Resulting positions are not the same");
         assertEquals(parsed.getStatus(), parsed2.getStatus());
         assertTrue(parsed.getMetadata().equals(parsed2.getMetadata()));
     }

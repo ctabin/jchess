@@ -65,4 +65,11 @@ public class Board {
 
         return true;
     }
+
+    /**
+     * Returns the color of the cell at the specified {@code coordinate}.
+     */
+    public Color getCellColor(Coordinate coordinate) {
+        return (coordinate.getRow()+coordinate.getColumn())%2==0 ? Color.BLACK : Color.WHITE;
+    }
 }
