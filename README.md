@@ -12,7 +12,7 @@ The goal is to provide a simple, easy-to-use API to manipulate chess games in Ja
 It is also easy to extend in order to create extended chess rules, new pieces and so on.
 
 This project does **NOT** provide any chess engine for position analysis. However, it could
-be very easily used by an engine to do such task.
+be very easily used by another API to do such task.
 
 This API is compiled with the JDK 11.
 
@@ -65,6 +65,9 @@ game.doMove("e4","e5","Nf3","Nc6","Bb5","a6","Ba4","Nf6","O-O","Be7",
 
 //agree to a draw
 game.draw();
+
+//prints the final position
+ASCIIPositionRenderer.render(System.out, game.getPosition());
 ```
 
 ## Usage
@@ -119,7 +122,7 @@ game.put("a1", new King(Color.WHITE));
 game.put("h8", new King(Color.BLACK));
 ```
 
-The example below creates a new game with only the two kings and White to move.
+The example below creates a new game with only the two kings and White has the move.
 
 It is possible to put some position without any king on the board. If there is no
 king, then the status of the game will remain `Status.NOT_FINISHED`.
@@ -260,6 +263,7 @@ String result = metadata.get("Result");
 Mainly for debug purposes, jchess provides a simple API to print a position in CLI:
 
 ```java
+JChessGame game = JChessGame.newGame();
 ASCIIPositionRenderer.render(System.out, game.getPosition());
 ```
 
@@ -318,8 +322,8 @@ be used to render different styles in ASCII.
 
 ## Compilation
 
-The standard maven command applies. However, since the tests are time-consuming, it is
-recommanded to skip them.
+The standard maven command applies. However, since the tests are time-consuming, you might
+want to skip them.
 
 ```
 mvn clean package -DskipTests
