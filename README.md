@@ -262,6 +262,21 @@ String result = metadata.get("Result");
 
 Mainly for debug purposes, jchess provides a simple API to print a position in CLI:
 
+#### Unicode
+
+The unicode renderer is compat but does not support showing which cells are dark or light.
+
+```java
+JChessGame game = JChessGame.newGame();
+UnicodePositionRenderer.render(System.out, game.getPosition());
+```
+
+![image](https://user-images.githubusercontent.com/18663098/159213301-16b0974a-842d-41c3-9b5d-7816b5e793e6.png)
+
+A third parameter for `UnicodePositionRenderer.render` can be passed to customize the empty cell rendering, for example `*` could be used.
+
+#### ASCII
+
 ```java
 JChessGame game = JChessGame.newGame();
 ASCIIPositionRenderer.render(System.out, game.getPosition());
