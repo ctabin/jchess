@@ -16,7 +16,7 @@ public class PGNWriterTest {
     public void testSimpleGame() {
         JChessGame game = JChessGame.newGame();
 
-        game.doMove("e4","e5","Nf3","Nc6","Bb5");
+        game.play("e4","e5","Nf3","Nc6","Bb5");
         game.draw();
 
         StringWriter sw = new StringWriter();
@@ -37,7 +37,7 @@ public class PGNWriterTest {
     public void testUnfinishedGame() throws Exception {
         JChessGame game = JChessGame.newGame();
 
-        game.doMove("e4","e5");
+        game.play("e4","e5");
 
         StringWriter sw = new StringWriter();
         try(PGNWriter writer = new PGNWriter(sw)) { writer.writeGame(game); }
@@ -60,19 +60,19 @@ public class PGNWriterTest {
     public void testMultipleGames() throws IOException {
         JChessGame game1 = JChessGame.newGame();
         {
-            game1.doMove("e4","e5","Nf3","Nc6","Bb5");
+            game1.play("e4","e5","Nf3","Nc6","Bb5");
             game1.draw();
         }
 
         JChessGame game2 = JChessGame.newGame();
         {
-            game2.doMove("e4","e5","Nf3","Nc6");
+            game2.play("e4","e5","Nf3","Nc6");
             game2.resign(Color.WHITE);
         }
 
         JChessGame game3 = JChessGame.newGame();
         {
-            game3.doMove("e4","e5","Nf3","Nc6");
+            game3.play("e4","e5","Nf3","Nc6");
             game3.resign(Color.BLACK);
         }
 

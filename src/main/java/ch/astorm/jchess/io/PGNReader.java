@@ -80,7 +80,7 @@ public class PGNReader extends BufferedReader {
         game.getMetadata().putAll(metadata);
 
         for(String move : parsedMoves) {
-            try { game.doMove(move); }
+            try { game.play(move); }
             catch(Exception e) { throw new PGNReaderException(e, game, parsedMoves, move); }
         }
 

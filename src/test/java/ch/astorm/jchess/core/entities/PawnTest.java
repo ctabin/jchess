@@ -11,72 +11,72 @@ public class PawnTest {
     @Test
     public void testEnPassantWhite() {
         JChessGame game = JChessGame.newGame();
-        game.doMove("e4", "h6");
-        game.doMove("e5", "h5");
-        game.doMove("c4", "h4");
-        game.doMove("c5", "d5");
+        game.play("e4", "h6");
+        game.play("e5", "h5");
+        game.play("c4", "h4");
+        game.play("c5", "d5");
 
-        game.doMove("cxd6"); assertTrue(game.back());
-        game.doMove("exd6"); assertTrue(game.back());
+        game.play("cxd6"); assertTrue(game.back());
+        game.play("exd6"); assertTrue(game.back());
 
         assertTrue(game.back());
-        game.doMove("d6");
-        game.doMove("h3");
-        game.doMove("d5");
+        game.play("d6");
+        game.play("h3");
+        game.play("d5");
 
-        assertThrows(InvalidMoveException.class, () -> game.doMove("exd6"));
-        assertThrows(InvalidMoveException.class, () -> game.doMove("cxd6"));
+        assertThrows(InvalidMoveException.class, () -> game.play("exd6"));
+        assertThrows(InvalidMoveException.class, () -> game.play("cxd6"));
     }
 
     @Test
     public void testEnPassantBlack() {
         JChessGame game = JChessGame.newGame();
-        game.doMove("h3", "e5");
-        game.doMove("h4", "c5");
-        game.doMove("h5", "e4");
-        game.doMove("h6", "c4");
-        game.doMove("d4");
+        game.play("h3", "e5");
+        game.play("h4", "c5");
+        game.play("h5", "e4");
+        game.play("h6", "c4");
+        game.play("d4");
 
-        game.doMove("cxd3"); assertTrue(game.back());
-        game.doMove("exd3"); assertTrue(game.back());
+        game.play("cxd3"); assertTrue(game.back());
+        game.play("exd3"); assertTrue(game.back());
         assertTrue(game.back());
 
-        game.doMove("d3");
-        game.doMove("a6");
-        game.doMove("d4");
+        game.play("d3");
+        game.play("a6");
+        game.play("d4");
 
-        assertThrows(InvalidMoveException.class, () -> game.doMove("cxd3"));
-        assertThrows(InvalidMoveException.class, () -> game.doMove("exd3"));
+        assertThrows(InvalidMoveException.class, () -> game.play("cxd3"));
+        assertThrows(InvalidMoveException.class, () -> game.play("exd3"));
     }
 
     @Test
     public void testPromotions() {
         JChessGame game = JChessGame.newGame();
-        game.doMove("h4", "a5");
-        game.doMove("h5", "a4");
-        game.doMove("h6", "a3");
-        game.doMove("hxg7", "axb2");
+        game.play("h4", "a5");
+        game.play("h5", "a4");
+        game.play("h6", "a3");
+        game.play("hxg7", "axb2");
 
-        assertThrows(InvalidMoveException.class, () -> game.doMove("gxh8=K"));
-        assertThrows(InvalidMoveException.class, () -> game.doMove("gxh8=x"));
-        assertThrows(InvalidMoveException.class, () -> game.doMove("Nc3=Q"));
+        assertThrows(InvalidMoveException.class, () -> game.play("gxh8=K"));
+        assertThrows(InvalidMoveException.class, () -> game.play("gxh8=x"));
+        assertThrows(InvalidMoveException.class, () -> game.play("Nc3=Q"));
 
-        game.doMove("gxh8=R", "bxa1=R");
-        game.doMove("Rxg8", "Rxb1");
-        game.doMove("Rh8", "Ra1");
+        game.play("gxh8=R", "bxa1=R");
+        game.play("Rxg8", "Rxb1");
+        game.play("Rh8", "Ra1");
     }
 
     @Test
     public void testInvalidPush() {
         JChessGame game = JChessGame.newGame();
-        game.doMove("Nc3", "Nc6");
+        game.play("Nc3", "Nc6");
 
-        assertThrows(InvalidMoveException.class, () -> game.doMove("c3"));
-        assertThrows(InvalidMoveException.class, () -> game.doMove("c4"));
+        assertThrows(InvalidMoveException.class, () -> game.play("c3"));
+        assertThrows(InvalidMoveException.class, () -> game.play("c4"));
 
-        game.doMove("a3");
+        game.play("a3");
 
-        assertThrows(InvalidMoveException.class, () -> game.doMove("c6"));
-        assertThrows(InvalidMoveException.class, () -> game.doMove("c5"));
+        assertThrows(InvalidMoveException.class, () -> game.play("c6"));
+        assertThrows(InvalidMoveException.class, () -> game.play("c5"));
     }
 }
