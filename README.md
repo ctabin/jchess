@@ -47,21 +47,21 @@ A standard chess game can be very easily created:
 JChessGame game = JChessGame.newGame();
 
 //apply the move to the game
-game.doMove("e4");
+game.play("e4");
 
 //cancel the previous move
 game.back();
 
 //moves can be played altogether
-game.doMove("e4","e5","Nf3","Nc6","Bb5","a6","Ba4","Nf6","O-O","Be7",
-            "Re1","b5","Bb3","d6","c3","O-O","h3","Nb8","d4","Nbd7",
-            "c4","c6","cxb5","axb5","Nc3","Bb7","Bg5","b4","Nb1","h6",
-            "Bh4","c5","dxe5","Nxe4","Bxe7","Qxe7","exd6","Qf6","Nbd2","Nxd6",
-            "Nc4","Nxc4","Bxc4","Nb6","Ne5","Rae8","Bxf7+","Rxf7","Nxf7","Rxe1+",
-            "Qxe1","Kxf7","Qe3","Qg5","Qxg5","hxg5","b3","Ke6","a3","Kd6",
-            "axb4","cxb4","Ra5","Nd5","f3","Bc8","Kf2","Bf5","Ra7","g6",
-            "Ra6+","Kc5","Ke1","Nf4","g3","Nxh3","Kd2","Kb5","Rd6","Kc5",
-            "Ra6","Nf2","g4","Bd3","Re6");
+game.play("e4","e5","Nf3","Nc6","Bb5","a6","Ba4","Nf6","O-O","Be7",
+		  "Re1","b5","Bb3","d6","c3","O-O","h3","Nb8","d4","Nbd7",
+		  "c4","c6","cxb5","axb5","Nc3","Bb7","Bg5","b4","Nb1","h6",
+		  "Bh4","c5","dxe5","Nxe4","Bxe7","Qxe7","exd6","Qf6","Nbd2","Nxd6",
+		  "Nc4","Nxc4","Bxc4","Nb6","Ne5","Rae8","Bxf7+","Rxf7","Nxf7","Rxe1+",
+		  "Qxe1","Kxf7","Qe3","Qg5","Qxg5","hxg5","b3","Ke6","a3","Kd6",
+		  "axb4","cxb4","Ra5","Nd5","f3","Bc8","Kf2","Bf5","Ra7","g6",
+		  "Ra6+","Kc5","Ke1","Nf4","g3","Nxh3","Kd2","Kb5","Rd6","Kc5",
+		  "Ra6","Nf2","g4","Bd3","Re6");
 
 //agree to a draw
 game.draw();
@@ -163,7 +163,7 @@ JChessGame game = JChessGame.newGame();
 game.switchColorOnMove();
 
 //black has the move
-game.doMove("e5");
+game.play("e5");
 ```
 
 ### Play moves
@@ -174,11 +174,11 @@ to update the position.
 
 ```java
 JChessGame game = JChessGame.newGame();
-game.doMove("e4"); //white plays e4
-game.doMove("e5"); //black plays e5
+game.play("e4"); //white plays e4
+game.play("e5"); //black plays e5
 
 //moves can be grouped together and they will be played in alternance
-game.doMove("Nc3","e6");
+game.play("Nc3","e6");
 ```
 
 Each move will update the current position and automatically switch the `Color` being on the move.

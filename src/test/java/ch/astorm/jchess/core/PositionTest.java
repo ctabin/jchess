@@ -31,7 +31,7 @@ public class PositionTest {
         List<Move> moves = game.getAvailableMoves();
         assertEquals(8, moves.size());
 
-        assertEquals(Status.NOT_FINISHED, game.doMove("Ng6"));
+        assertEquals(Status.NOT_FINISHED, game.play("Ng6"));
     }
 
     @Test

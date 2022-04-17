@@ -18,12 +18,12 @@ public class MoveParserTest {
     @Test
     public void testSimpleGame() {
         JChessGame game = JChessGame.newGame();
-        assertEquals(Status.NOT_FINISHED, game.doMove("f3"));
-        assertEquals(Status.NOT_FINISHED, game.doMove("e5"));
-        assertEquals(Status.NOT_FINISHED, game.doMove("g4"));
-        assertEquals(Status.WIN_BLACK, game.doMove("Qh4"));
+        assertEquals(Status.NOT_FINISHED, game.play("f3"));
+        assertEquals(Status.NOT_FINISHED, game.play("e5"));
+        assertEquals(Status.NOT_FINISHED, game.play("g4"));
+        assertEquals(Status.WIN_BLACK, game.play("Qh4"));
         assertEquals(0, game.getAvailableMoves().size());
-        assertThrows(IllegalStateException.class, () -> game.doMove(null));
+        assertThrows(IllegalStateException.class, () -> game.play(null));
     }
 
     @Test
@@ -40,7 +40,7 @@ public class MoveParserTest {
         35. Ra7 g6 36. Ra6+ Kc5 37. Ke1 Nf4 38. g3 Nxh3 39. Kd2 Kb5 40. Rd6 Kc5 41. Ra6
         Nf2 42. g4 Bd3 43. Re6
         */
-        game.doMove("e4","e5","Nf3","Nc6","Bb5","a6","Ba4","Nf6","O-O","Be7",
+        game.play("e4","e5","Nf3","Nc6","Bb5","a6","Ba4","Nf6","O-O","Be7",
                     "Re1","b5","Bb3","d6","c3","O-O","h3","Nb8","d4","Nbd7",
                     "c4","c6","cxb5","axb5","Nc3","Bb7","Bg5","b4","Nb1","h6",
                     "Bh4","c5","dxe5","Nxe4","Bxe7","Qxe7","exd6","Qf6","Nbd2","Nxd6",
@@ -56,11 +56,11 @@ public class MoveParserTest {
     @Test
     public void testInvalidMove() {
         JChessGame game = JChessGame.newGame();
-        assertThrows(InvalidMoveException.class, () -> game.doMove("e5"));
-        assertThrows(InvalidMoveException.class, () -> game.doMove("exd4"));
-        assertThrows(InvalidMoveException.class, () -> game.doMove("Nxc3"));
-        assertThrows(InvalidMoveException.class, () -> game.doMove("O-O"));
-        assertThrows(InvalidMoveException.class, () -> game.doMove("O-O-O"));
+        assertThrows(InvalidMoveException.class, () -> game.play("e5"));
+        assertThrows(InvalidMoveException.class, () -> game.play("exd4"));
+        assertThrows(InvalidMoveException.class, () -> game.play("Nxc3"));
+        assertThrows(InvalidMoveException.class, () -> game.play("O-O"));
+        assertThrows(InvalidMoveException.class, () -> game.play("O-O-O"));
     }
 
     @Test
@@ -72,9 +72,9 @@ public class MoveParserTest {
         position.put(0, 0, new Bishop(Color.WHITE));
         position.put(2, 2, new Bishop(Color.WHITE));
 
-        assertThrows(InvalidMoveException.class, () -> game.doMove("Bb2"));
-        assertThrows(InvalidMoveException.class, () -> game.doMove("Bbb2"));
-        game.doMove("Bab2");
+        assertThrows(InvalidMoveException.class, () -> game.play("Bb2"));
+        assertThrows(InvalidMoveException.class, () -> game.play("Bbb2"));
+        game.play("Bab2");
     }
 
     @Test
@@ -87,23 +87,23 @@ public class MoveParserTest {
         position.put(6, 6, new Pawn(Color.BLACK));
         position.put(6, 7, new Pawn(Color.BLACK));
 
-        assertThrows(IllegalStateException.class, () -> game.doMove("a8"));
-        assertEquals(Status.WIN_WHITE, game.doMove("a8=Q"));
+        assertThrows(IllegalStateException.class, () -> game.play("a8"));
+        assertEquals(Status.WIN_WHITE, game.play("a8=Q"));
     }
 
     @Test
     public void testNonPromotionMove() {
         JChessGame game = JChessGame.newGame();
         MoveParser parser = new MoveParser(game);
-        assertThrows(IllegalStateException.class, () -> game.doMove("e4=Q"));
+        assertThrows(IllegalStateException.class, () -> game.play("e4=Q"));
     }
 
     @Test
     public void testParseError() {
         JChessGame game = JChessGame.newGame();
-        assertThrows(IllegalArgumentException.class, () -> game.doMove("z3"));
-        assertThrows(IllegalArgumentException.class, () -> game.doMove("Kz3"));
-        assertThrows(IllegalArgumentException.class, () -> game.doMove("b9"));
-        assertThrows(IllegalArgumentException.class, () -> game.doMove("Kb9"));
+        assertThrows(IllegalArgumentException.class, () -> game.play("z3"));
+        assertThrows(IllegalArgumentException.class, () -> game.play("Kz3"));
+        assertThrows(IllegalArgumentException.class, () -> game.play("b9"));
+        assertThrows(IllegalArgumentException.class, () -> game.play("Kb9"));
     }
 }

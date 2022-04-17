@@ -231,7 +231,7 @@ public class JChessGame {
      * @param move The move.
      * @return The game status after the move.
      */
-    public Status doMove(Move move) {
+    public Status play(Move move) {
         if(!status.isPlayAllowed()) { throw new IllegalStateException("Game is "+status); }
         return apply(move);
     }
@@ -245,7 +245,7 @@ public class JChessGame {
      * @return The game status after the move.
      * @throws InvalidMoveException If one of the move does not map to a legal move.
      */
-    public Status doMove(String algebraicNotation, String... otherMoves) {
+    public Status play(String algebraicNotation, String... otherMoves) {
         if(!status.isPlayAllowed()) { throw new IllegalStateException("Game is "+status); }
 
         apply(getMove(algebraicNotation));

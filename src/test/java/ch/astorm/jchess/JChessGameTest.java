@@ -47,17 +47,17 @@ public class JChessGameTest {
         assertNull(game.getAvailableMoves("e5"));
         assertTrue(game.getAvailableMoves("e1").isEmpty());
 
-        game.doMove(game.getAvailableMoves("e2").get(0));
+        game.play(game.getAvailableMoves("e2").get(0));
         game.resign(Color.WHITE);
 
-        assertThrows(IllegalStateException.class, () -> game.doMove(null));
+        assertThrows(IllegalStateException.class, () -> game.play(null));
     }
 
     @Test
     public void testStartPositionInversed() {
         JChessGame game = JChessGame.newGame();
         assertEquals(Color.BLACK, game.switchColorOnMove());
-        game.doMove("e5", "d4");
+        game.play("e5", "d4");
 
         Move captureMove = game.getMove("exd4");
         assertEquals("exd4", captureMove.toString());
@@ -72,7 +72,7 @@ public class JChessGameTest {
 
         assertEquals(false, game.back());
 
-        assertEquals(JChessGame.Status.DRAW, game.doMove("Ka2"));
+        assertEquals(JChessGame.Status.DRAW, game.play("Ka2"));
         assertTrue(game.getStatus().isFinished());
     }
 
@@ -83,7 +83,7 @@ public class JChessGameTest {
             game.put("a1", new King(Color.WHITE));
             game.put("h8", new King(Color.BLACK));
             game.put("g7", new Bishop(Color.BLACK));
-            assertEquals(JChessGame.Status.DRAW, game.doMove("Ka2"));
+            assertEquals(JChessGame.Status.DRAW, game.play("Ka2"));
         }
 
         {
@@ -91,7 +91,7 @@ public class JChessGameTest {
             game.put("a1", new King(Color.BLACK));
             game.put("h8", new King(Color.WHITE));
             game.put("g7", new Bishop(Color.WHITE));
-            assertEquals(JChessGame.Status.DRAW, game.doMove("Kg8"));
+            assertEquals(JChessGame.Status.DRAW, game.play("Kg8"));
         }
     }
 
@@ -102,7 +102,7 @@ public class JChessGameTest {
             game.put("a1", new King(Color.WHITE));
             game.put("h8", new King(Color.BLACK));
             game.put("g7", new Knight(Color.BLACK));
-            assertEquals(JChessGame.Status.DRAW, game.doMove("Ka2"));
+            assertEquals(JChessGame.Status.DRAW, game.play("Ka2"));
         }
 
         {
@@ -110,7 +110,7 @@ public class JChessGameTest {
             game.put("a1", new King(Color.BLACK));
             game.put("h8", new King(Color.WHITE));
             game.put("g7", new Knight(Color.WHITE));
-            assertEquals(JChessGame.Status.DRAW, game.doMove("Kg8"));
+            assertEquals(JChessGame.Status.DRAW, game.play("Kg8"));
         }
     }
 
@@ -121,7 +121,7 @@ public class JChessGameTest {
             game.put("a1", new King(Color.WHITE));
             game.put("h8", new King(Color.BLACK));
             game.put("g7", new Rook(Color.BLACK));
-            assertEquals(JChessGame.Status.NOT_FINISHED, game.doMove("Ka2"));
+            assertEquals(JChessGame.Status.NOT_FINISHED, game.play("Ka2"));
         }
 
         {
@@ -129,7 +129,7 @@ public class JChessGameTest {
             game.put("a1", new King(Color.BLACK));
             game.put("h8", new King(Color.WHITE));
             game.put("g7", new Rook(Color.WHITE));
-            assertEquals(JChessGame.Status.NOT_FINISHED, game.doMove("Kg8"));
+            assertEquals(JChessGame.Status.NOT_FINISHED, game.play("Kg8"));
         }
     }
 
@@ -166,10 +166,10 @@ public class JChessGameTest {
         game.put("g7", new Rook(Color.BLACK));
 
         while(game.getStatus()==Status.NOT_FINISHED) {
-            game.doMove("Ka2");
-            game.doMove("Kg8");
-            game.doMove("Ka1");
-            game.doMove("Kh8");
+            game.play("Ka2");
+            game.play("Kg8");
+            game.play("Ka1");
+            game.play("Kh8");
         }
 
         assertEquals(Status.DRAW_REPETITION, game.getStatus());
@@ -182,7 +182,7 @@ public class JChessGameTest {
         game.put("b1", new Queen(Color.WHITE));
         game.put("h8", new King(Color.BLACK));
 
-        assertEquals(Status.DRAW_STALEMATE, game.doMove("Qg6"));
-        assertThrows(IllegalStateException.class, () -> game.doMove("Qg5"));
+        assertEquals(Status.DRAW_STALEMATE, game.play("Qg6"));
+        assertThrows(IllegalStateException.class, () -> game.play("Qg5"));
     }
 }
