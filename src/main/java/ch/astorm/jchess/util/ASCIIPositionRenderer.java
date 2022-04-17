@@ -12,7 +12,7 @@ import java.util.function.Function;
 /**
  * Simple utility class to render a {@code Position}.
  */
-public class ASCIIPositionRenderer implements PositionRenderer {
+public class ASCIIPositionRenderer extends AbstractTextPositionRenderer {
     private static final String[] ROW_HEADER = new String[]
     {
         "     ",
@@ -57,26 +57,32 @@ public class ASCIIPositionRenderer implements PositionRenderer {
         "     ",
     };
 
-    private PrintStream out;
-    private ASCIIStyle style;
+    private final ASCIIStyle style;
 
     /**
      * Creates a renderer to the specified {@code out} stream.
      */
     public ASCIIPositionRenderer(PrintStream out, ASCIIStyle style) {
-        this.out = out;
+        super(out);
         this.style = style;
     }
 
+    /**
+     * Returns the {@code ASCIIStyle} used by this renderer.
+     */
+    public ASCIIStyle getStyle() {
+        return style;
+    }
+    
     /**
      * Renders the given {@code position} with a {@link DefaultASCIIStyle}.
      */
     public static void render(PrintStream out, Position position) {
         new ASCIIPositionRenderer(out, new DefaultASCIIStyle()).render(position);
     }
-
+    
     @Override
-    public void render(Position position) {
+    public CharSequence renderToString(Position position) {
         Board board = position.getBoard();
 
         char whiteBackgroundStyle = style.getWhiteBackgroundStyle();
@@ -87,7 +93,7 @@ public class ASCIIPositionRenderer implements PositionRenderer {
         int nbColumns = board.getColumnsCount();
         int nbTotalRows = nbRows*ASCIIStyle.NB_ROWS_PER_CELL;
         int nbTotalColumns = nbColumns*ASCIIStyle.NB_COLUMNS_PER_CELL;
-        char[][] assciiBoard = new char[nbTotalRows][nbTotalColumns];
+        char[][] asciiBoard = new char[nbTotalRows][nbTotalColumns];
 
         for(int row=0 ; row<nbRows ; ++row) {
             for(int col=0 ; col<nbColumns ; ++col) {
@@ -108,46 +114,50 @@ public class ASCIIPositionRenderer implements PositionRenderer {
                 int colOffset = col*ASCIIStyle.NB_COLUMNS_PER_CELL;
                 for(int ti=0 ; ti<ASCIIStyle.NB_ROWS_PER_CELL ; ++ti) {
                     for(int tc=0 ; tc<ASCIIStyle.NB_COLUMNS_PER_CELL ; ++tc) {
-                        assciiBoard[rowOffset+ti][colOffset+tc] = cell[ti][tc];
+                        asciiBoard[rowOffset+ti][colOffset+tc] = cell[ti][tc];
                     }
                 }
             }
         }
 
+        String lineSeparator = getLineSeparator();
+        StringBuilder builder = new StringBuilder(256);
+        
         //first border
-        out.print("     ");
-        printRow(nbTotalColumns+2, i -> borderStyle);
-        out.println();
+        builder.append("     ");
+        printRow(builder, nbTotalColumns+2, i -> borderStyle);
+        builder.append(lineSeparator);
 
         //whole board
         for(int r=0 ; r<nbTotalRows ; ++r) {
             String headerRow = ROW_HEADER[r];
-            for(int hr=0 ; hr<headerRow.length() ; ++hr) { out.print(headerRow.charAt(hr)); }
+            for(int hr=0 ; hr<headerRow.length() ; ++hr) { builder.append(headerRow.charAt(hr)); }
 
-            out.print(borderStyle);
+            builder.append(borderStyle);
 
-            char[] row = assciiBoard[r];
-            printRow(nbTotalColumns, colIndex -> row[colIndex]);
+            char[] row = asciiBoard[r];
+            printRow(builder, nbTotalColumns, colIndex -> row[colIndex]);
             
-            out.print(borderStyle);
-            out.println();
+            builder.append(borderStyle);
+            builder.append(lineSeparator);
         }
 
         //last border
-        out.print("     ");
-        printRow(nbTotalColumns+2, i -> borderStyle);
-        out.println();
+        builder.append("     ");
+        printRow(builder, nbTotalColumns+2, i -> borderStyle);
+        builder.append(lineSeparator);
 
-        out.println("                   _        _        _        __       __       _              ");
-        out.println("         /\\       |_)      /        | \\      |_       |_       /        |_|    ");
-        out.println("        /--\\      |_)      \\_       |_/      |__      |        \\_?      | |    ");
-        out.println("                                                                               ");
-        out.println();
+        builder.append("                   _        _        _        __       __       _              ").append(lineSeparator);
+        builder.append("         /\\       |_)      /        | \\      |_       |_       /        |_|    ").append(lineSeparator);
+        builder.append("        /--\\      |_)      \\_       |_/      |__      |        \\_?      | |    ").append(lineSeparator);
+        builder.append("                                                                               ").append(lineSeparator);
+        
+        return builder;
     }
 
-    private void printRow(int nbColumns, Function<Integer, Character> content) {
+    private void printRow(StringBuilder builder, int nbColumns, Function<Integer, Character> content) {
         for(int i=0 ; i<nbColumns ; ++i) {
-            out.print(content.apply(i));
+            builder.append(content.apply(i));
         }
     }
 }
