@@ -2,65 +2,21 @@
 package ch.astorm.jchess.util;
 
 import ch.astorm.jchess.JChessGame;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+
+import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Objects;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 public class ASCIIPositionRendererTest {
-    private final String separator = System.lineSeparator();
-    private final String expectedOutput = "" +
-            "     ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" +  separator +
-            "     :         :::::::::    _    :::www:::   _+_   ::::_::::         ::::::::::" + separator +
-            "  _  :  |=|=|  :: _,, ::   (/)   :::)#(:::   )#(   :::(/):::   _,,   ::|=|=|:::" + separator +
-            " (_) :   |#|   ::\"- \\~::   |#|   :::|#|:::   |#|   :::|#|:::  \"- \\~  :::|#|::::" + separator +
-            " (_) :   |#|   :::|#|:::   |#|   :::|#|:::   |#|   :::|#|:::   |#|   :::|#|::::" + separator +
-            "     :  /###\\  ::/###\\::  /###\\  ::/###\\::  /###\\  ::/###\\::  /###\\  ::/###\\:::" + separator +
-            "     ::::::::::         :::::::::         :::::::::         :::::::::         :" + separator +
-            "  __ :::::():::    ()   ::::():::    ()   ::::():::    ()   ::::():::    ()   :" + separator +
-            "   / :::::)(:::    )(   ::::)(:::    )(   ::::)(:::    )(   ::::)(:::    )(   :" + separator +
-            "  /  ::::/##\\::   /##\\  :::/##\\::   /##\\  :::/##\\::   /##\\  :::/##\\::   /##\\  :" + separator +
-            "     ::::::::::         :::::::::         :::::::::         :::::::::         :" + separator +
-            "     :         :::::::::         :::::::::         :::::::::         ::::::::::" + separator +
-            "     :         :::::::::         :::::::::         :::::::::         ::::::::::" + separator +
-            "  /  :         :::::::::         :::::::::         :::::::::         ::::::::::" + separator +
-            " (_) :         :::::::::         :::::::::         :::::::::         ::::::::::" + separator +
-            "     :         :::::::::         :::::::::         :::::::::         ::::::::::" + separator +
-            "     ::::::::::         :::::::::         :::::::::         :::::::::         :" + separator +
-            "  _  ::::::::::         :::::::::         :::::::::         :::::::::         :" + separator +
-            " |_  ::::::::::         :::::::::         :::::::::         :::::::::         :" + separator +
-            "  _) ::::::::::         :::::::::         :::::::::         :::::::::         :" + separator +
-            "     ::::::::::         :::::::::         :::::::::         :::::::::         :" + separator +
-            "     :         :::::::::         :::::::::         :::::::::         ::::::::::" + separator +
-            "   . :         :::::::::         :::::::::         :::::::::         ::::::::::" + separator +
-            "  /| :         :::::::::         :::::::::         :::::::::         ::::::::::" + separator +
-            " '-| :         :::::::::         :::::::::         :::::::::         ::::::::::" + separator +
-            "     :         :::::::::         :::::::::         :::::::::         ::::::::::" + separator +
-            "     ::::::::::         :::::::::         :::::::::         :::::::::         :" + separator +
-            "  _  ::::::::::         :::::::::         :::::::::         :::::::::         :" + separator +
-            "  _) ::::::::::         :::::::::         :::::::::         :::::::::         :" + separator +
-            "  _) ::::::::::         :::::::::         :::::::::         :::::::::         :" + separator +
-            "     ::::::::::         :::::::::         :::::::::         :::::::::         :" + separator +
-            "     :         :::::::::         :::::::::         :::::::::         ::::::::::" + separator +
-            "  _  :    ()   ::::():::    ()   ::::():::    ()   ::::():::    ()   ::::()::::" + separator +
-            "   ) :    )(   ::::)(:::    )(   ::::)(:::    )(   ::::)(:::    )(   ::::)(::::" + separator +
-            "  /_ :   /__\\  :::/__\\::   /__\\  :::/__\\::   /__\\  :::/__\\::   /__\\  :::/__\\:::" + separator +
-            "     :         :::::::::         :::::::::         :::::::::         ::::::::::" + separator +
-            "     ::::::::::         ::::_::::   www   :::_+_:::    _    :::::::::         :" + separator +
-            "     :::|_|_|::   _,,   :::(/):::   ) (   :::) (:::   (/)   :: _,, ::  |_|_|  :" + separator +
-            "  /| ::::| |:::  \"- \\~  :::| |:::   | |   :::| |:::   | |   ::\"- \\~::   | |   :" + separator +
-            "   | ::::| |:::   | |   :::| |:::   | |   :::| |:::   | |   :::| |:::   | |   :" + separator +
-            "     :::/___\\::  /___\\  ::/___\\::  /___\\  ::/___\\::  /___\\  ::/___\\::  /___\\  :" + separator +
-            "     ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" + separator +
-            "                   _        _        _        __       __       _              " + separator +
-            "         /\\       |_)      /        | \\      |_       |_       /        |_|    " + separator +
-            "        /--\\      |_)      \\_       |_/      |__      |        \\_?      | |    " + separator +
-            "                                                                               " + separator +
-            separator;
-
     @Test
-    public void testRendering() {
+    public void testRendering() throws URISyntaxException, IOException  {
         JChessGame game = JChessGame.newGame();
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -69,6 +25,14 @@ public class ASCIIPositionRendererTest {
         }
 
         String str = baos.toString(StandardCharsets.US_ASCII);
-        assertEquals(expectedOutput, str);
+        assertEquals(getExpectedOutput(), str);
+    }
+
+    private String getExpectedOutput() throws URISyntaxException, IOException {
+        URL expectedOutputTemplateURL = getClass().getResource("ASCIIPositionTemplate.txt");
+        Objects.requireNonNull(expectedOutputTemplateURL);
+        return Files
+                .readString(Path.of(expectedOutputTemplateURL.toURI()))
+                .replaceAll("separator", System.lineSeparator());
     }
 }
