@@ -7,9 +7,8 @@ import ch.astorm.jchess.core.entities.*;
 
 import java.io.PrintStream;
 
-public class UnicodePositionRenderer implements PositionRenderer {
-    private static final String separator = System.lineSeparator();
-    private final PrintStream out;
+public class UnicodePositionRenderer extends AbstractTextPositionRenderer {
+    private final  String lineSeparator = getLineSeparator();
     private final String emptyDarkCell;
     private final String emptyLightCell;
 
@@ -17,7 +16,7 @@ public class UnicodePositionRenderer implements PositionRenderer {
      * Creates a renderer to the specified {@code out} stream.
      */
     private UnicodePositionRenderer(PrintStream out, String emptyDarkCell, String emptyLightCell) {
-        this.out = out;
+        super(out);
         this.emptyDarkCell = emptyDarkCell;
         this.emptyLightCell = emptyLightCell;
     }
@@ -30,15 +29,8 @@ public class UnicodePositionRenderer implements PositionRenderer {
         new UnicodePositionRenderer(out, emptyDarkCell, emptyLightCell).render(position);
     }
 
-    /**
-     * Renders the given {@code position}.
-     */
     @Override
-    public void render(Position position) {
-        out.println(renderToString(position));
-    }
-
-    private String renderToString(Position position) {
+    public CharSequence renderToString(Position position) {
         StringBuilder sb = new StringBuilder(182);
         for (var i=7; i>=0; i--) {
             sb.append(8 - i).append("\t");
@@ -53,8 +45,8 @@ public class UnicodePositionRenderer implements PositionRenderer {
                     sb.append(emptyCell).append("\t");
                 }
             }
-            sb.append(separator);
-            if (i>0) sb.append(separator);
+            sb.append(lineSeparator);
+            if (i>0) sb.append(lineSeparator);
         }
         sb.append("\ta\tb\tc\td\te\tf\tg\th");
         return sb.toString();
