@@ -15,6 +15,8 @@ import ch.astorm.jchess.core.entities.Rook;
 import ch.astorm.jchess.core.rules.RuleManager;
 import ch.astorm.jchess.io.MoveParser;
 import ch.astorm.jchess.io.MoveParser.InvalidMoveException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -273,16 +275,41 @@ public class JChessGame {
      * Returns back to the previous position and resets the game status accordingly.
      * If there is no previous position available, this method returns false.
      *
-     * @return True if the previous position has been set.
+     * @return The dropped move or null.
      */
-    public boolean back() {
-        Position previous = position.getPreviousPosition();
-        if(previous==null) { return false; }
+    public Move back() {
+        List<Move> dropped = back(1);
+        return dropped.size()==1 ? dropped.get(0) : null;
+    }
+    
+    /**
+     * Returns back to the {@code nbMoves}-th position. If there is not enough move,
+     * the function just stops when there is no move to rollback anymore.
+     * <p>The returned list is ordered. The first move of the list will be the one to
+     * play in order to get back to the position before this method was called.</p>
+     * 
+     * @param nbMoves The number of moves to rollback.
+     * @return The dropped moves or an empty list.
+     */
+    public List<Move> back(int nbMoves) {
+        if(nbMoves<=0) { return Collections.EMPTY_LIST; }
+        
+        int counter = 0;
+        
+        List<Move> dropped = new ArrayList<>(Math.min(nbMoves, position.getMoveHistory().size()));
+        while(counter<nbMoves) {
+            Position previous = position.getPreviousPosition();
+            if(previous==null) { return dropped; }
 
-        Position current = position;
-        position = previous;
-        status = ruleManager.getEndgameStatus(position);
-        return true;
+            Move last = position.getLastMove();
+            position = previous;
+            status = ruleManager.getEndgameStatus(position);
+            ++counter;
+            
+            dropped.add(0, last);
+        }
+
+        return dropped;
     }
 
     /**

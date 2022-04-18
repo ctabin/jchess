@@ -133,6 +133,14 @@ public class Position {
     }
 
     /**
+     * Returns the last move played that reaches this position.
+     */
+    public Move getLastMove() {
+        if(moveHistory.isEmpty()) { return null; }
+        return moveHistory.get(moveHistory.size()-1);
+    }
+    
+    /**
      * Returns the move history to reach this position.
      */
     public List<Move> getMoveHistory() {
