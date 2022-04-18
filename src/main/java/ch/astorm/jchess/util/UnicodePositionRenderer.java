@@ -1,6 +1,5 @@
 package ch.astorm.jchess.util;
 
-import ch.astorm.jchess.JChessGame;
 import ch.astorm.jchess.core.Color;
 import ch.astorm.jchess.core.Moveable;
 import ch.astorm.jchess.core.Position;
@@ -70,8 +69,5 @@ public class UnicodePositionRenderer extends AbstractTextPositionRenderer {
         if(moveable instanceof Pawn)
             return isWhite ? "♙" : "♟";
         throw new IllegalArgumentException("Unhandled moveable: "+moveable);
-    }
-    public static void main(String[] array) {
-        UnicodePositionRenderer.render(System.out, JChessGame.newGame().getPosition());
     }
 }
