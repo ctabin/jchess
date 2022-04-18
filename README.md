@@ -49,7 +49,7 @@ JChessGame game = JChessGame.newGame();
 //apply the move to the game
 game.play("e4");
 
-//cancel the previous move
+//cancel the last move
 game.back();
 
 //moves can be played altogether
@@ -182,7 +182,12 @@ game.play("Nc3","e6");
 ```
 
 Each move will update the current position and automatically switch the `Color` being on the move.
-It is possible to go back in the move by using the `game.back()` method.
+It is possible to go back in the moves by using the `game.back()` methods.
+
+```java
+Move lastMove = game.back(); //drop the last move
+List<Move> lastMoves = game.back(3); //drop the last 3 moves (if possible)
+```
 
 You may want to access a possible move in the position without actually playing it:
 

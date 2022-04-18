@@ -12,10 +12,10 @@ import ch.astorm.jchess.core.entities.Knight;
 import ch.astorm.jchess.core.entities.Queen;
 import ch.astorm.jchess.core.entities.Rook;
 import ch.astorm.jchess.core.rules.RuleManager;
-import ch.astorm.jchess.util.ASCIIPositionRenderer;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -70,7 +70,9 @@ public class JChessGameTest {
         game.put("h8", new King(Color.BLACK));
         assertFalse(game.getStatus().isFinished());
 
-        assertEquals(false, game.back());
+        assertNull(game.back());
+        assertTrue(game.back(2).isEmpty());
+        assertTrue(game.back(-5).isEmpty());
 
         assertEquals(JChessGame.Status.DRAW, game.play("Ka2"));
         assertTrue(game.getStatus().isFinished());
@@ -172,6 +174,23 @@ public class JChessGameTest {
             game.play("Kh8");
         }
 
+        assertEquals(Status.DRAW_REPETITION, game.getStatus());
+        
+        Move m1 = game.back();
+        assertNotNull(m1);
+        
+        List<Move> m2 = game.back(5);
+        assertEquals(5, m2.size());
+        
+        List<Move> m3 = game.back(999);
+        assertEquals(14, m3.size());
+        
+        assertNotEquals(Status.DRAW_REPETITION, game.getStatus());
+        
+        m3.forEach(m -> game.apply(m));
+        m2.forEach(m -> game.apply(m));
+        game.apply(m1);
+        
         assertEquals(Status.DRAW_REPETITION, game.getStatus());
     }
 

@@ -3,8 +3,8 @@ package ch.astorm.jchess.core.entities;
 
 import ch.astorm.jchess.JChessGame;
 import ch.astorm.jchess.io.MoveParser.InvalidMoveException;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 public class PawnTest {
@@ -16,10 +16,10 @@ public class PawnTest {
         game.play("c4", "h4");
         game.play("c5", "d5");
 
-        game.play("cxd6"); assertTrue(game.back());
-        game.play("exd6"); assertTrue(game.back());
+        game.play("cxd6"); assertNotNull(game.back());
+        game.play("exd6"); assertNotNull(game.back());
 
-        assertTrue(game.back());
+        assertNotNull(game.back());
         game.play("d6");
         game.play("h3");
         game.play("d5");
@@ -37,9 +37,9 @@ public class PawnTest {
         game.play("h6", "c4");
         game.play("d4");
 
-        game.play("cxd3"); assertTrue(game.back());
-        game.play("exd3"); assertTrue(game.back());
-        assertTrue(game.back());
+        game.play("cxd3"); assertNotNull(game.back());
+        game.play("exd3"); assertNotNull(game.back());
+        assertNotNull(game.back());
 
         game.play("d3");
         game.play("a6");
