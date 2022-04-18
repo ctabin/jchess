@@ -1,5 +1,6 @@
 package ch.astorm.jchess.util;
 
+import ch.astorm.jchess.JChessGame;
 import ch.astorm.jchess.core.Color;
 import ch.astorm.jchess.core.Moveable;
 import ch.astorm.jchess.core.Position;
@@ -8,7 +9,7 @@ import ch.astorm.jchess.core.entities.*;
 import java.io.PrintStream;
 
 public class UnicodePositionRenderer extends AbstractTextPositionRenderer {
-    private final  String lineSeparator = getLineSeparator();
+    private final  String lineSeparator = super.getLineSeparator();
     private final String emptyDarkCell;
     private final String emptyLightCell;
 
@@ -22,9 +23,9 @@ public class UnicodePositionRenderer extends AbstractTextPositionRenderer {
     }
 
     public static void render(PrintStream out, Position position) {
-        new UnicodePositionRenderer(out, "▧", " ").render(position);
-
+        render(out, position, " ", " ");
     }
+
     public static void render(PrintStream out, Position position, String emptyDarkCell, String emptyLightCell) {
         new UnicodePositionRenderer(out, emptyDarkCell, emptyLightCell).render(position);
     }
@@ -32,9 +33,11 @@ public class UnicodePositionRenderer extends AbstractTextPositionRenderer {
     @Override
     public CharSequence renderToString(Position position) {
         StringBuilder sb = new StringBuilder(182);
-        for (var i=7; i>=0; i--) {
-            sb.append(8 - i).append("\t");
-            for (var j=0; j<8; j++) {
+        int nbRows = position.getBoard().getRowsCount();
+        int nbColumns = position.getBoard().getColumnsCount();
+        for (var i=nbRows-1; i>=0; i--) {
+            sb.append(nbRows - i).append("\t");
+            for (var j=0; j<nbColumns; j++) {
                 boolean isDark = (i % 2 == 0) == (j % 2 == 0);
                 String emptyCell = isDark ? emptyDarkCell : emptyLightCell;
                 Moveable moveable =  position.get(i, j);
@@ -49,23 +52,26 @@ public class UnicodePositionRenderer extends AbstractTextPositionRenderer {
             if (i>0) sb.append(lineSeparator);
         }
         sb.append("\ta\tb\tc\td\te\tf\tg\th");
-        return sb.toString();
+        return sb;
     }
 
     private static String getUnicode(Moveable moveable) {
         boolean isWhite = moveable.getColor() == Color.WHITE;
         if(moveable instanceof Rook)
-            if (isWhite) return "♖"; else return "♜";
+           return isWhite ? "♖" : "♜";
         if(moveable instanceof Knight)
-            if (isWhite) return "♘"; else return "♞";
+            return isWhite ? "♘" : "♞";
         if(moveable instanceof Bishop)
-            if (isWhite) return "♗"; else return "♝";
+            return isWhite ? "♗" : "♝";
         if(moveable instanceof King)
-            if (isWhite) return "♔"; else return "♚";
+            return isWhite ? "♔" : "♚";
         if(moveable instanceof Queen)
-            if (isWhite) return "♕"; else return "♛";
+            return isWhite ? "♕" : "♛";
         if(moveable instanceof Pawn)
-            if (isWhite) return "♙"; else return "♟";
-        throw new IllegalStateException();
+            return isWhite ? "♙" : "♟";
+        throw new IllegalArgumentException("Unhandled moveable: "+moveable);
+    }
+    public static void main(String[] array) {
+        UnicodePositionRenderer.render(System.out, JChessGame.newGame().getPosition());
     }
 }

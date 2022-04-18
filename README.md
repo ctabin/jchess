@@ -271,9 +271,7 @@ JChessGame game = JChessGame.newGame();
 UnicodePositionRenderer.render(System.out, game.getPosition());
 ```
 
-![image](https://user-images.githubusercontent.com/18663098/159409079-d4f994d3-2051-404a-aec7-951e0a4a7755.png)
-
-Two extra params can be passed to `UnicodePositionRenderer.render` to customize the empty cells display String
+![image](/unicode-board.PNG)
 
 #### ASCII
 
