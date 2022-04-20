@@ -271,7 +271,7 @@ JChessGame game = JChessGame.newGame();
 UnicodePositionRenderer.render(System.out, game.getPosition());
 ```
 
-![image](/unicode-board.PNG)
+![image](/unicode.PNG)
 
 #### ASCII
 
