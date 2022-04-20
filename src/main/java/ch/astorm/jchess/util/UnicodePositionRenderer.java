@@ -8,7 +8,6 @@ import ch.astorm.jchess.core.entities.*;
 import java.io.PrintStream;
 
 public class UnicodePositionRenderer extends AbstractTextPositionRenderer {
-    private final  String lineSeparator = super.getLineSeparator();
     private final String emptyDarkCell;
     private final String emptyLightCell;
 
@@ -47,8 +46,8 @@ public class UnicodePositionRenderer extends AbstractTextPositionRenderer {
                     sb.append(emptyCell).append("\t");
                 }
             }
-            sb.append(lineSeparator);
-            if (i>0) sb.append(lineSeparator);
+            sb.append(super.getLineSeparator());
+            if (i>0) sb.append(super.getLineSeparator());
         }
         sb.append("\ta\tb\tc\td\te\tf\tg\th");
         return sb;
