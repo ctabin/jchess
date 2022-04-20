@@ -35,7 +35,7 @@ public class UnicodePositionRenderer extends AbstractTextPositionRenderer {
         int nbRows = position.getBoard().getRowsCount();
         int nbColumns = position.getBoard().getColumnsCount();
         for (var i=nbRows-1; i>=0; i--) {
-            sb.append(nbRows - i).append("\t");
+            sb.append(i+1).append("\t");
             for (var j=0; j<nbColumns; j++) {
                 boolean isDark = (i % 2 == 0) == (j % 2 == 0);
                 String emptyCell = isDark ? emptyDarkCell : emptyLightCell;
