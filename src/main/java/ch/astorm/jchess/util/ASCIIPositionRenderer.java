@@ -120,7 +120,7 @@ public class ASCIIPositionRenderer extends AbstractTextPositionRenderer {
             }
         }
 
-        String lineSeparator = getLineSeparator();
+        String lineSeparator = super.getLineSeparator();
         StringBuilder builder = new StringBuilder(256);
         
         //first border
