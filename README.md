@@ -65,8 +65,8 @@ game.play("e4","e5","Nf3","Nc6","Bb5","a6","Ba4","Nf6","O-O","Be7",
 //agree to a draw
 game.draw();
 
-//prints the final position
-ASCIIPositionRenderer.render(System.out, game.getPosition());
+//prints the final position (white is on the bottom)
+ASCIIPositionRenderer.render(System.out, game.getPosition(), Color.WHITE);
 ```
 
 ## Usage
