@@ -161,12 +161,11 @@ public class PGNReader extends BufferedReader {
      * Parses the read moves in tokens to feed the {@link MoveParser}.
      */
     protected List<String> parseMoves(String moves) {
-        if(!moves.startsWith("1.")) { throw new IllegalArgumentException("Invalid moves: "+moves); }
-
         List<String> parsedMoves = new ArrayList<>(64);
         int moveCounter = 1;
         String nextMoveStr = moveCounter+".";
         int nextMove = moves.indexOf(nextMoveStr);
+        if (nextMove > 0) throw new IllegalArgumentException("Invalid moves: "+moves);
         while(nextMove>=0) {
             int currentMove = nextMove;
             int moveLength = nextMoveStr.length();
