@@ -1,6 +1,5 @@
 [![Maven](https://img.shields.io/maven-central/v/ch.astorm/jchess.svg)](https://search.maven.org/search?q=g:ch.astorm%20AND%20a:jchess)
 [![Build](https://app.travis-ci.com/ctabin/jchess.svg?branch=master)](https://app.travis-ci.com/github/ctabin/jchess)
-[![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/ctabin/jchess.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ctabin/jchess/context:java)
 
 # jchess
 
