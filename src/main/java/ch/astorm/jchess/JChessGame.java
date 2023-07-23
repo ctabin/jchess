@@ -313,6 +313,18 @@ public class JChessGame {
     }
 
     /**
+     * Returns the captured pieces of the specified {@code Color} based on the current
+     * position move histoy.
+     */
+    public List<Moveable> getCaptured(Color color) {
+        return position.getMoveHistory().stream().
+            map(m -> m.getCapturedEntity()).
+            filter(m -> m!=null).
+            filter(m -> m.getColor()==color).
+            collect(Collectors.toList());
+    }
+    
+    /**
      * Returns the {@link Color} that has the move.
      */
     public Color getColorOnMove() {
