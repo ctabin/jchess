@@ -219,6 +219,18 @@ The status can simply be retrieved after any move with the code below:
 Status status = game.getStatus();
 ```
 
+### Captured pieces
+
+The easy way to get the captured pieces of a game is simple to use the `JChessGame.getCaptured` method:
+
+```java
+JChessGame game = JChessGame.newGame();
+game.play("e4", "d5", "exd5");
+
+game.getCaptured(Color.WHITE); //empty
+game.getCaptured(Color.BLACK); //contains 1 Pawn entity
+```
+
 ### Import games from PGN files
 
 It is possible to import basic [PGN](https://en.wikipedia.org/wiki/Portable_Game_Notation) files

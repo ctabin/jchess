@@ -9,6 +9,7 @@ import ch.astorm.jchess.core.Moveable;
 import ch.astorm.jchess.core.entities.Bishop;
 import ch.astorm.jchess.core.entities.King;
 import ch.astorm.jchess.core.entities.Knight;
+import ch.astorm.jchess.core.entities.Pawn;
 import ch.astorm.jchess.core.entities.Queen;
 import ch.astorm.jchess.core.entities.Rook;
 import ch.astorm.jchess.core.rules.RuleManager;
@@ -37,6 +38,8 @@ public class JChessGameTest {
         JChessGame game = JChessGame.newGame();
         assertNull(game.get("e5"));
         assertNotNull(game.get("a1"));
+        assertTrue(game.getCaptured(Color.WHITE).isEmpty());
+        assertTrue(game.getCaptured(Color.BLACK).isEmpty());
 
         assertEquals(20, game.getAvailableMoves().size());
 
@@ -203,5 +206,18 @@ public class JChessGameTest {
 
         assertEquals(Status.DRAW_STALEMATE, game.play("Qg6"));
         assertThrows(IllegalStateException.class, () -> game.play("Qg5"));
+    }
+    
+    @Test
+    public void testCapturedPieces() {
+        JChessGame game = JChessGame.newGame();
+        game.play("e4", "d5", "exd5");
+        
+        assertTrue(game.getCaptured(Color.WHITE).isEmpty());
+        
+        List<Moveable> capturedBlack = game.getCaptured(Color.BLACK);
+        assertEquals(1, capturedBlack.size());
+        assertEquals(Color.BLACK, capturedBlack.get(0).getColor());
+        assertTrue(capturedBlack.get(0) instanceof Pawn);
     }
 }
