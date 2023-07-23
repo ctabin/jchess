@@ -3,6 +3,7 @@ package ch.astorm.jchess.io;
 
 import ch.astorm.jchess.JChessGame;
 import ch.astorm.jchess.JChessGame.Status;
+import ch.astorm.jchess.core.Color;
 import ch.astorm.jchess.io.PGNReader.PGNReaderException;
 import ch.astorm.jchess.util.ASCIIPositionRenderer;
 import java.io.IOException;
@@ -58,7 +59,7 @@ public class PGNReadWriteTest {
             pe.getGame().getMetadata().forEach((k,v) -> System.out.println("- "+k+": "+v));
             System.err.println("------------------------------------------");
             System.err.println("Position before the move:\n");
-            ASCIIPositionRenderer.render(System.err, pe.getGame().getPosition());
+            ASCIIPositionRenderer.render(System.err, pe.getGame().getPosition(), Color.WHITE);
             System.err.println("==========================================");
             fail("Unable to parse PGN game", pe);
         }
