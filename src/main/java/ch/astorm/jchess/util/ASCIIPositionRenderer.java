@@ -13,7 +13,7 @@ import java.util.function.Function;
  * Simple utility class to render a {@code Position}.
  */
 public class ASCIIPositionRenderer extends AbstractTextPositionRenderer {
-    private static final String[] ROW_HEADER = new String[]
+    private static final String[] ROW_HEADER_WHITE = new String[]
     {
         "     ",
         "  _  ",
@@ -54,17 +54,63 @@ public class ASCIIPositionRenderer extends AbstractTextPositionRenderer {
         "     ",
         "  /| ",
         "   | ",
+        "     "
+    };
+    
+    private static final String[] ROW_HEADER_BLACK = new String[]
+    {
         "     ",
+        "     ",
+        "  /| ",
+        "   | ",
+        "     ",
+        "     ",
+        "  _  ",
+        "   ) ",
+        "  /_ ",
+        "     ",
+        "     ",
+        "  _  ",
+        "  _) ",
+        "  _) ",
+        "     ",
+        "     ",
+        "   . ",
+        "  /| ",
+        " '-| ",
+        "     ",
+        "     ",
+        "  _  ",
+        " |_  ",
+        "  _) ",
+        "     ",
+        "     ",
+        "     ",
+        "  /  ",
+        " (_) ",
+        "     ",
+        "     ",
+        "  __ ",
+        "   / ",
+        "  /  ",
+        "     ",
+        "     ",
+        "  _  ",
+        " (_) ",
+        " (_) ",
+        "     "
     };
 
     private final ASCIIStyle style;
+    private Color orientation;
 
     /**
      * Creates a renderer to the specified {@code out} stream.
      */
-    public ASCIIPositionRenderer(PrintStream out, ASCIIStyle style) {
+    public ASCIIPositionRenderer(PrintStream out, ASCIIStyle style, Color orientation) {
         super(out);
         this.style = style;
+        this.orientation = orientation;
     }
 
     /**
@@ -77,14 +123,15 @@ public class ASCIIPositionRenderer extends AbstractTextPositionRenderer {
     /**
      * Renders the given {@code position} with a {@link DefaultASCIIStyle}.
      */
-    public static void render(PrintStream out, Position position) {
-        new ASCIIPositionRenderer(out, new DefaultASCIIStyle()).render(position);
+    public static void render(PrintStream out, Position position, Color orientation) {
+        new ASCIIPositionRenderer(out, new DefaultASCIIStyle(), orientation).render(position);
     }
     
     @Override
     public CharSequence renderToString(Position position) {
         Board board = position.getBoard();
-
+        boolean isWhiteOrientation = orientation==Color.WHITE;
+        
         char whiteBackgroundStyle = style.getWhiteBackgroundStyle();
         char blackBackgroundStyle = style.getBlackBackgroundStyle();
         char borderStyle = style.getBorderStyle();
@@ -110,8 +157,11 @@ public class ASCIIPositionRenderer extends AbstractTextPositionRenderer {
                 Moveable moveable = position.get(coordinate);
                 if(moveable!=null) { style.renderCell(cell, coordinate, moveable); }
 
-                int rowOffset = (nbRows - row - 1)*ASCIIStyle.NB_ROWS_PER_CELL;
-                int colOffset = col*ASCIIStyle.NB_COLUMNS_PER_CELL;
+                int targetRow = isWhiteOrientation ? row : nbRows - row -1;
+                int targetCol = isWhiteOrientation ? col : nbColumns - col -1;
+                
+                int rowOffset = (nbRows - targetRow - 1)*ASCIIStyle.NB_ROWS_PER_CELL;
+                int colOffset = targetCol*ASCIIStyle.NB_COLUMNS_PER_CELL;
                 for(int ti=0 ; ti<ASCIIStyle.NB_ROWS_PER_CELL ; ++ti) {
                     for(int tc=0 ; tc<ASCIIStyle.NB_COLUMNS_PER_CELL ; ++tc) {
                         asciiBoard[rowOffset+ti][colOffset+tc] = cell[ti][tc];
@@ -130,7 +180,7 @@ public class ASCIIPositionRenderer extends AbstractTextPositionRenderer {
 
         //whole board
         for(int r=0 ; r<nbTotalRows ; ++r) {
-            String headerRow = ROW_HEADER[r];
+            String headerRow = isWhiteOrientation ? ROW_HEADER_WHITE[r] : ROW_HEADER_BLACK[r];
             for(int hr=0 ; hr<headerRow.length() ; ++hr) { builder.append(headerRow.charAt(hr)); }
 
             builder.append(borderStyle);
@@ -147,11 +197,17 @@ public class ASCIIPositionRenderer extends AbstractTextPositionRenderer {
         printRow(builder, nbTotalColumns+2, i -> borderStyle);
         builder.append(lineSeparator);
 
-        builder.append("                   _        _        _        __       __       _              ").append(lineSeparator);
-        builder.append("         /\\       |_)      /        | \\      |_       |_       /        |_|    ").append(lineSeparator);
-        builder.append("        /--\\      |_)      \\_       |_/      |__      |        \\_?      | |    ").append(lineSeparator);
-        builder.append("                                                                               ").append(lineSeparator);
-        
+        if(isWhiteOrientation) {
+            builder.append("                   _        _        _        __       __       _              ").append(lineSeparator);
+            builder.append("         /\\       |_)      /        | \\      |_       |_       /        |_|    ").append(lineSeparator);
+            builder.append("        /--\\      |_)      \\_       |_/      |__      |        \\_?      | |    ").append(lineSeparator);
+            builder.append("                                                                               ").append(lineSeparator);
+        } else {
+            builder.append("                 _        __        __        _         _        _             ").append(lineSeparator);
+            builder.append("       |_|      /        |_        |_        | \\       /        |_)      /\\    ").append(lineSeparator);
+            builder.append("       | |      \\_?      |         |__       |_/       \\_       |_)     /--\\   ").append(lineSeparator);
+            builder.append("                                                                               ").append(lineSeparator);
+        }
         return builder;
     }
 
