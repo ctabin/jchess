@@ -293,8 +293,8 @@ UnicodePositionRenderer.render(System.out, game.getPosition());
 
 ```java
 JChessGame game = JChessGame.newGame();
-ASCIIPositionRenderer.render(System.out, game.getPosition(), Color.WHITE);
 game.play("e4", "g6", "Nf3", "Bg7", "d4", "a5", "b3");
+ASCIIPositionRenderer.render(System.out, game.getPosition(), Color.WHITE);
 ```
 
 The result will look like this:
