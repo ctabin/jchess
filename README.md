@@ -85,7 +85,7 @@ JChessGame game = JChessGame.newGame();
 ```
 
 Once the game is created, it has already the standard chess rules and the initial
-position built in. Hence, the game is ready and White have the move.
+position built in. Hence, the game is ready and White is on move.
 
 ### Query the position
 
@@ -121,7 +121,7 @@ game.put("a1", new King(Color.WHITE));
 game.put("h8", new King(Color.BLACK));
 ```
 
-The example below creates a new game with only the two kings and White has the move.
+The example below creates a new game with only the two kings and White is on move.
 
 It is possible to put some position without any king on the board. If there is no
 king, then the status of the game will remain `Status.NOT_FINISHED`.
@@ -130,8 +130,7 @@ Note that it is not possible to put multiple kings of the same color on the boar
 
 ### Position's legal moves
 
-It is very easy to retrieves all the legal moves in a position for the color
-that has the move:
+It is very easy to retrieve all the legal moves in a position for the color on move:
 
 ```java
 List<Move> legalMoves = game.getAvailableMoves();
@@ -143,7 +142,7 @@ If the position is known, the API allows to get the legal moves from a given loc
 List<Move> legalMoves = game.getAvailableMoves("c3");
 ```
 
-It is also possible to retrieves the legal moves for a given entity:
+It is also possible to retrieve the legal moves for a given entity:
 
 ```java
 Position position = game.getPosition();
@@ -154,8 +153,8 @@ List<Move> kingMoves = game.getAvailableMoves(king);
 
 ### Color on move
 
-The method `getColorOnMove()` can be used to know which color has the move. It is also possible
-to change the current color on move:
+The method `getColorOnMove()` can be used to know which color is on move. It is also possible
+to switch it to the other one:
 
 ```java
 JChessGame game = JChessGame.newGame();
