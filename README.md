@@ -1,5 +1,6 @@
 [![Maven](https://img.shields.io/maven-central/v/ch.astorm/jchess.svg)](https://search.maven.org/search?q=g:ch.astorm%20AND%20a:jchess)
 [![Build](https://app.travis-ci.com/ctabin/jchess.svg?branch=master)](https://app.travis-ci.com/github/ctabin/jchess)
+[![javadoc](https://javadoc.io/badge2/ch.astorm/jchess/javadoc.svg)](https://javadoc.io/doc/ch.astorm/jchess) 
 
 # jchess
 
