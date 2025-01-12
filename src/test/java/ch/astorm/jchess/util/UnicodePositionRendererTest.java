@@ -21,7 +21,7 @@ public class UnicodePositionRendererTest {
             "3\t \t \t \t \t \t \t \t \t" + separator + separator +
             "2\t♙\t♙\t♙\t♙\t♙\t♙\t♙\t♙\t" + separator + separator +
             "1\t♖\t♘\t♗\t♕\t♔\t♗\t♘\t♖\t" + separator +
-            "\ta\tb\tc\td\te\tf\tg\th" + separator;
+            " \ta\tb\tc\td\te\tf\tg\th" + separator;
 
     @Test
     public void testUnicodeRendering() {
