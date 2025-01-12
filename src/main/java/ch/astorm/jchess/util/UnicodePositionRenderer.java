@@ -49,7 +49,7 @@ public class UnicodePositionRenderer extends AbstractTextPositionRenderer {
             sb.append(super.getLineSeparator());
             if (i>0) sb.append(super.getLineSeparator());
         }
-        sb.append("\ta\tb\tc\td\te\tf\tg\th");
+        sb.append(" \ta\tb\tc\td\te\tf\tg\th");
         return sb;
     }
 
