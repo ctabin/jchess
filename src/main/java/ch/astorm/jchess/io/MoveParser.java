@@ -205,10 +205,13 @@ public class MoveParser {
         Displacement displacement = move.getDisplacement();
         Moveable moveable = displacement.getMoveable();
 
+        boolean isOppositeKingInCheck = false;
         Color currentColor = moveable.getColor();
         Position positionAfter = move.getPositionAfter();
-        Coordinate oppositeKingLocation = positionAfter.findLocation(King.class, currentColor.opposite());
-        boolean isOppositeKingInCheck = positionAfter.canBeReached(oppositeKingLocation, currentColor);
+        if(positionAfter!=null) {
+            Coordinate oppositeKingLocation = positionAfter.findLocation(King.class, currentColor.opposite());
+            isOppositeKingInCheck = positionAfter.canBeReached(oppositeKingLocation, currentColor);
+        }
 
         if(move.getLinkedDisplacements()!=null) {
             int newColumn = displacement.getNewLocation().getColumn();
@@ -254,7 +257,7 @@ public class MoveParser {
         }
 
         String promotionStr = "";
-        if(move.isPromotionNeeded()) {
+        if(move.isPromotionNeeded() && move.getPromotion()!=null) {
             Character promotionChar = ENTITY_MAPPING.getKey(move.getPromotion().getClass());
             promotionStr = PROMOTION_SEPARATOR+""+promotionChar;
         }
