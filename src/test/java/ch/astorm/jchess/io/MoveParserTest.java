@@ -4,11 +4,13 @@ package ch.astorm.jchess.io;
 import ch.astorm.jchess.JChessGame;
 import ch.astorm.jchess.JChessGame.Status;
 import ch.astorm.jchess.core.Color;
+import ch.astorm.jchess.core.Move;
 import ch.astorm.jchess.core.Position;
 import ch.astorm.jchess.core.entities.Bishop;
 import ch.astorm.jchess.core.entities.King;
 import ch.astorm.jchess.core.entities.Pawn;
 import ch.astorm.jchess.io.MoveParser.InvalidMoveException;
+import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
@@ -105,5 +107,18 @@ public class MoveParserTest {
         assertThrows(IllegalArgumentException.class, () -> game.play("Kz3"));
         assertThrows(IllegalArgumentException.class, () -> game.play("b9"));
         assertThrows(IllegalArgumentException.class, () -> game.play("Kb9"));
+    }
+    
+    @Test
+    public void testNoKingMove() {
+        JChessGame game = JChessGame.newEmptyGame(Color.WHITE);
+        game.put("e7", new Pawn(Color.WHITE));
+        game.put("a1", new Pawn(Color.WHITE));
+        game.put("a3", new Pawn(Color.BLACK));
+        
+        List<Move> legalMoves = game.getPosition().getLegalMoves();
+        assertEquals(2, legalMoves.size());
+        assertEquals("e8", legalMoves.get(0).toString());
+        assertEquals("a2", legalMoves.get(1).toString());
     }
 }
