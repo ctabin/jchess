@@ -14,7 +14,7 @@ It is also easy to extend in order to create extended chess rules, new pieces an
 This project does **NOT** provide any chess engine for position analysis. However, it could
 be very easily used by another API to do such task.
 
-This API is compiled with the JDK 11.
+This API is compiled with the JDK 25.
 
 The main features of this API are:
 - Ease of use
