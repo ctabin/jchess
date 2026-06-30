@@ -43,13 +43,13 @@
   </properties>
   <build>
     <plugins>
-      <!-- Compilation with the JDK 11 -->
+      <!-- Compilation with the JDK 25 -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.15.0</version>
         <configuration>
-          <release>11</release>
+          <release>25</release>
           <compilerArgs>
             <arg>-Xlint:unchecked</arg>
           </compilerArgs>
